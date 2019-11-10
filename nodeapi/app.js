@@ -26,6 +26,7 @@ mongoose.connect(
 const postRoutes = require('./routes/post');
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/user');
+const groupRoutes = require('./routes/group');
 
 // apiDocs
 app.get('/', (req, res) => {
@@ -55,6 +56,7 @@ app.use(cors());
 app.use('/', postRoutes);
 app.use('/', authRoutes);
 app.use('/', userRoutes);
+app.use('/', groupRoutes);
 app.use(function (err, req, res, next) {
   if (err.name === 'UnauthorizedError') {
     res.status(401).json({ error: 'Unauthorized' });

@@ -5,7 +5,7 @@ const _ = require('lodash');
 
 exports.postById = (req, res, next, id) => {
     Post.findById(id)
-    .populate("posteBy", "_id name")
+    .populate("postedBy", "_id name")
     .exec((err, post) => {
         if (err || !post) {
             return res.status(400).json({
