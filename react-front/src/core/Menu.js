@@ -15,7 +15,7 @@ const Menu = ({ history }) => (
     <ul className="nav nav-tabs bg-primary">
       <li className="nav-item">
         <Link className="nav-link" style={isActive(history, "/")} to="/">
-          Home
+          Squadify
         </Link>
       </li>
 
@@ -68,7 +68,7 @@ const Menu = ({ history }) => (
               to={`/user/${isAuthenticated().user._id}`}
               style={isActive(history, `/user/${isAuthenticated().user._id}`)}
             >
-              {`${isAuthenticated().user.name}'s profile`}
+              My Profile
             </Link>
           </li>
         </>
