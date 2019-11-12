@@ -1,10 +1,14 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import Menu from "./Menu";
 
-const Background = "https://images.unsplash.com/photo-1491438590914-bc09fcaaf77a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80";
+ const Background = "https://images.unsplash.com/photo-1491438590914-bc09fcaaf77a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80";
 
 const Home = () => (
   <>
+  <div>
+    <Menu/>
+    </div>
     <div
       style={{
         backgroundImage: `url("${Background}")`,
@@ -24,11 +28,11 @@ const Home = () => (
         alignItems: "center"
       }}
     >
-      <Link to="/signin">
+      {/* <Link to="/signin">
         <button className="btn btn-raised btn-warning">
           <span style={{fontWeight:"bold"}}>Join Free</span>
         </button>
-      </Link>
+      </Link> */}
     </div>
   </>
 );

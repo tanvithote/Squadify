@@ -11,23 +11,42 @@ const isActive = (history, path) => {
 };
 
 const Menu = ({ history }) => (
+//   <nav className='navbar navbar-dark bg-dark navbar-expand-lg'>
+//     <div className='container'>
+//       <a className='navbar-brand' href=''>SQUADIFY</a>
+//       <img src="/docs/4.3/assets/brand/bootstrap-solid.svg" width="30" height="30" alt=""></img>
+//       <form className='form-inline my-2 my-lg-0'>
+//         <input className='form-control mr-sm-2 bwm-search' type='search' placeholder="Search Groups" aria-label='Search'></input>
+//         <button className='btn btn-outline-success my-2 my-sm-0 btn-bwm-search' type='submit'>Search</button>
+//       </form>
+//       <button className='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbarNavAltMarkup' aria-controls='navbarNavAltMarkup' aria-expanded='false' aria-label='Toggle navigation'>
+//         <span className='navbar-toggler-icon'></span>
+//       </button>
+//       <div className='collapse navbar-collapse' id='navbarNavAltMarkup'>
+//         <div className='navbar-nav ml-auto'>
+//           <a className='nav-item nav-link active' href=''>Login <span className='sr-only'>(current)</span></a>
+//           <a className='nav-item nav-link' href=''>Register</a>
+//         </div>
+//       </div>
+//     </div>
+// </nav>
   <div>
-    <ul className="nav nav-tabs bg-primary">
-      <li className="nav-item">
-        <Link className="nav-link" style={isActive(history, "/")} to="/">
-          Squadify
+    <ul className="navbar navbar-dark bg-dark navbar-expand-lg">
+      <li className="navbar-brand color:white">
+        <Link className="nav-link text-color:" style={isActive(history, "/home")} to="/home">
+          HOME
         </Link>
       </li>
 
-      <li className="nav-item">
+       <li className="nav-item">
         <Link className="nav-link" style={isActive(history, "/users")} to="/users">
           Users
         </Link>
-      </li>
-
-      {!isAuthenticated() && (
+      </li> 
+.
+      {/* {!isAuthenticated() && (
         <>
-          <li className="nav-item">
+          <li className="nav-item nav-link active text-right">
             <Link
               className="nav-link"
               style={isActive(history, "/signin")}
@@ -36,7 +55,7 @@ const Menu = ({ history }) => (
               Sign In
             </Link>
           </li>
-          <li className="nav-item">
+          <li className="nav-item nav-link">
             <Link
               className="nav-link"
               style={isActive(history, "/signup")}
@@ -46,7 +65,7 @@ const Menu = ({ history }) => (
             </Link>
           </li>
         </>
-      )}
+      )} */}
 
       {isAuthenticated() && (
         <>

@@ -73,7 +73,7 @@ class Signup extends Component {
         ></input>
       </div>
       <button onClick={this.clickSubmit} className="btn btn-raised btn-primary">
-        Submit
+        Sign Up
       </button>
     </form>
   );
@@ -83,18 +83,17 @@ class Signup extends Component {
     return (
       <div className="container">
         <h2 className="mt-5 mb-5">Sign Up</h2>
-        <div
-          className="alert alert-danger"
-          sytle={{ display: error ? "" : "none" }}
+         <div
+          sytle={{ display: error ? "" : "none"} }
         >
-          {error}
+          <label className="alert-danger">{error}</label>
         </div>
-        <div
+        {/* <div
           className="alert alert-info"
           sytle={{ display: open ? "" : "none" }}
         >
-          Sign up successfully. Please <Link to="/signin">Sign in</Link>.
-        </div>
+         Sign up successfully. Please <Link to="/signin">Sign in</Link>.
+        </div> */}
         {this.signupForm(name, email, password)}
       </div>
     );
