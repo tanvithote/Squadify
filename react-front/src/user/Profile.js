@@ -4,13 +4,17 @@ import { Redirect, Link } from "react-router-dom";
 import { read } from "./apiUser";
 import DefaultProfile from "../images/avatar.png";
 import DeleteUser from "./DeleteUser";
+import { listByUser } from "../post/apiPost";
+import ProfileTabs from "../user/ProfileTabs";
 
 class Profile extends Component {
   constructor() {
     super();
     this.state = {
       user: "",
-      redirectToSignin: false
+      redirectToSignin: false,
+      error: "",
+      posts: []
     };
   }
 
@@ -21,6 +25,7 @@ class Profile extends Component {
         this.setState({ redirectToSignin: true });
       } else {
         this.setState({ user: data });
+        this.loadPosts(data._id); // pass userId to loadPosts by this user
       }
     });
   };
@@ -31,13 +36,24 @@ class Profile extends Component {
     this.init(userId);
   }
 
+  loadPosts = userId => {
+    const token = isAuthenticated().token;
+    listByUser(userId, token).then(data => {
+      if (data.error) {
+        console.log(data.error);
+      } else {
+        this.setState({ posts: data });
+      }
+    });
+  };
+
   componentWillReceiveProps(props) {
     const userId = props.match.params.userId;
     this.init(userId);
   }
 
   render() {
-    const { redirectToSignin, user } = this.state;
+    const { redirectToSignin, user, posts } = this.state;
     if (redirectToSignin) {
       return <Redirect to="/signin" />;
     }
@@ -52,7 +68,7 @@ class Profile extends Component {
       <div className="container">
         <h2 className="mt-5 mb-5">Profile</h2>
         <div className="row">
-          <div className="col-md-6">
+          <div className="col-md-4">
             <img
               style={{ height: "200px", width: "auto" }}
               className="img-thumbnail"
@@ -61,7 +77,7 @@ class Profile extends Component {
               alt={user.name}
             />
           </div>
-          <div className="col-md-6">
+          <div className="col-md-8">
             <div className="lead mt-2">
               <p>Hello {user.name}</p>
               <p>Email: {user.email}</p>
@@ -70,7 +86,14 @@ class Profile extends Component {
             {isAuthenticated().user && isAuthenticated().user._id === user._id && (
               <div className="d-inline-block">
                 <Link
-                  className="btn btn-raised btn-success mr-5"
+                  className="btn btn-raised btn-info mr-3"
+                  to={`/post/create`}
+                >
+                  Create New Post
+                </Link>
+
+                <Link
+                  className="btn btn-raised btn-success mr-3"
                   to={`/user/edit/${user._id}`}
                 >
                   Edit Profile
@@ -83,9 +106,10 @@ class Profile extends Component {
 
         <div className="row">
           <div className="col md-12 mt-5 mb-5">
-            <hr/>
+            <hr />
             <p className="lead">{user.about}</p>
-            <hr/>
+            <hr />
+            <ProfileTabs posts={posts} />
           </div>
         </div>
       </div>

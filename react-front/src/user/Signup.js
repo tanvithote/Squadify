@@ -83,17 +83,12 @@ class Signup extends Component {
     return (
       <div className="container">
         <h2 className="mt-5 mb-5">Sign Up</h2>
-         <div
-          sytle={{ display: error ? "" : "none"} }
-        >
-          <label className="alert-danger">{error}</label>
-        </div>
-        {/* <div
-          className="alert alert-info"
-          sytle={{ display: open ? "" : "none" }}
-        >
-         Sign up successfully. Please <Link to="/signin">Sign in</Link>.
-        </div> */}
+        {error && <div className="alter alert-danger mb-2">{error}</div>}
+        {open && (
+          <div className="alert alert-info">
+            Sign up successfully. Please <Link to="/signin">Sign in</Link>.
+          </div>
+        )}
         {this.signupForm(name, email, password)}
       </div>
     );

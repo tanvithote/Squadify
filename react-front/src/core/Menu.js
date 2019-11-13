@@ -44,7 +44,7 @@ const Menu = ({ history }) => (
         </Link>
       </li> 
 .
-      {/* {!isAuthenticated() && (
+      {!isAuthenticated() && (
         <>
           <li className="nav-item nav-link active text-right">
             <Link
@@ -65,10 +65,28 @@ const Menu = ({ history }) => (
             </Link>
           </li>
         </>
-      )} */}
+      )}
 
       {isAuthenticated() && (
         <>
+          <li className="nav-item">
+            <Link
+              className="nav-link"
+              to={"/post/create"}
+              style={isActive(history, "/post/create")}
+            >
+              Create new Post
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link
+              className="nav-link"
+              to={`/user/${isAuthenticated().user._id}`}
+              style={isActive(history, `/user/${isAuthenticated().user._id}`)}
+            >
+              My Profile
+            </Link>
+          </li>
           <li className="nav-item">
             <span
               className="nav-link"
@@ -80,15 +98,6 @@ const Menu = ({ history }) => (
             >
               Sign Out
             </span>
-          </li>
-          <li className="nav-item">
-            <Link
-              className="nav-link"
-              to={`/user/${isAuthenticated().user._id}`}
-              style={isActive(history, `/user/${isAuthenticated().user._id}`)}
-            >
-              My Profile
-            </Link>
           </li>
         </>
       )}

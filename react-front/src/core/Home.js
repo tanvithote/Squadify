@@ -7,7 +7,7 @@ import Menu from "./Menu";
 const Home = () => (
   <>
   <div>
-    <Menu/>
+    {/* <Menu/> */}
     </div>
     <div
       style={{

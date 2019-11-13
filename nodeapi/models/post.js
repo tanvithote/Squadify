@@ -11,7 +11,7 @@ const postSchema = new mongoose.Schema({
         required: true
     },
     photo: {
-        type: Buffer,
+        data: Buffer,
         contentType: String
     },
     postedBy: {
@@ -21,7 +21,8 @@ const postSchema = new mongoose.Schema({
     created: {
         type: Date,
         default: Date.now()
-    }
+    },
+    updated: Date
 });
 
 module.exports = mongoose.model("Post", postSchema);
