@@ -7,9 +7,19 @@ class Groups extends Component {
   constructor() {
     super();
     this.state = {
-      groups: []
+      groups: [],
+      query: ""
     };
   }
+
+  queryChange = evt => {
+    this.setState({ query: evt.target.value });
+    console.log(this.state.query);
+  };
+
+  handleSearch = () => {
+    this.context.router.push(`/groups/search/${this.state.query}`);
+  };
 
   componentDidMount() {
     list().then(data => {
@@ -67,12 +77,31 @@ class Groups extends Component {
   };
 
   render() {
-    const { groups } = this.state;
+    const { groups, query } = this.state;
     return (
-      <div className="container fluid">
-        <h2 className="mt-5 mb-5">All Groups</h2>
-        {this.renderGroups(groups)}
-      </div>
+      <>
+        <div>
+          <form>
+            <input
+              type="text"
+              placeholder="Search.."
+              name="search"
+              onChange={this.queryChange}
+              onSubmit={this.handleSearch}
+            />
+            {/* <button onClick={handleSearch}>
+              {/* <i class="fa fa-search"></i> */}
+            {/* </button> */}
+            <Link to={`/groups/search/${query}`}>
+              <i class="fa fa-search"></i>
+            </Link>
+          </form>
+        </div>
+        <div className="container fluid">
+          <h2 className="mt-5 mb-5">All Groups</h2>
+          {this.renderGroups(groups)}
+        </div>
+      </>
     );
   }
 }

@@ -10,17 +10,6 @@ const isActive = (history, path) => {
   }
 };
 
-var query = "";
-
-const queryChange = evt => {
-  query = evt.target.value;
-  return query;
-};
-
-const handleSearch = () => {
-  this.context.router.push(`/groups/search/${query}`);
-};
-
 const Menu = ({ history }) => (
   //   <nav className='navbar navbar-dark bg-dark navbar-expand-lg'>
   //     <div className='container'>
@@ -127,27 +116,7 @@ const Menu = ({ history }) => (
           </li>
         </>
       )}
-      <li className="nav-item">
-        <div>
-          <form>
-            <input
-              type="text"
-              placeholder="Search.."
-              name="search"
-              onChange={queryChange}
-            />
-            {/* <button onClick={handleSearch}>
-              {/* <i class="fa fa-search"></i> */}
-            {/* </button> */}
-            <Link
-              to={`/groups/search/${query}`}
-              style={isActive(history, `/groups/search/${query}`)}
-            >
-              <i class="fa fa-search"></i>
-            </Link>
-          </form>
-        </div>
-      </li>
+     
     </ul>
   </div>
 );
