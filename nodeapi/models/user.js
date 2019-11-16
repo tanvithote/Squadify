@@ -37,6 +37,10 @@ const userSchema = new mongoose.Schema({
   groups: {
     type: [ObjectId],
     ref: "Group"
+  },
+  events:{
+    type:[ObjectId],
+    ref:"Events"
   }
 });
 
