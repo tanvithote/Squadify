@@ -13,6 +13,7 @@ exports.groupById = (req, res, next, id) => {
           error: err
         });
       }
+      console.log(group);
       req.group = group;
       next();
     });
@@ -21,9 +22,10 @@ exports.groupById = (req, res, next, id) => {
 exports.getGroups = (req, res) => {
   const groups = Group.find()
     .populate("createdBy", "_id name")
-    .select("_id name location")
+    // .select("_id name location about tags")
+    .sort({ created: -1 })
     .then(groups => {
-      res.json({ groups: groups });
+      res.json(groups);
     })
     .catch(err => console.log(err));
 };
@@ -47,6 +49,9 @@ exports.createGroup = (req, res, next) => {
       group.photo.data = fs.readFileSync(files.photo.path);
       group.photo.contentType = files.photo.type;
     }
+    if (group.tags) {
+      group.tags = group.tags[0].toLowerCase().split(", ");
+    }
     group.save((err, result) => {
       if (err) {
         return res.status(400).json({
@@ -62,6 +67,11 @@ exports.createGroup = (req, res, next) => {
       group: result
     });
   });
+};
+
+exports.photo = (req, res, next) => {
+  res.set("Content-Type", req.group.photo.contentType);
+  return res.send(req.group.photo.data);
 };
 
 exports.groupsByUser = (req, res) => {
@@ -116,36 +126,113 @@ exports.deleteGroup = (req, res) => {
   });
 };
 
-exports.joinGroup = (req, res, next) => {
-  let group = req.group;
-  group.members.push(req.auth._id);
-  let user_find = null;
-  User.findById(req.auth._id).exec((err, user) => {
-    if (err || !user) {
-      return res.status(400).json({
-        error: "User not found."
-      });
-    }
-    user_find = user;
-    user.groups.push(group._id); // adds profile object in req with user info
-    user.save(err => {
-      if (err) {
-        return res.status(400).json({
-          error: err
-        });
-      }
-    });
-  });
-  group.save(err => {
+exports.singleGroup = (req, res) => {
+  return res.json(req.group);
+};
+
+// exports.joinGroup = (req, res, next) => {
+//   let group = req.group;
+//   group.members.push(req.auth._id);
+//   let user_find = null;
+//   User.findById(req.auth._id).exec((err, user) => {
+//     if (err || !user) {
+//       return res.status(400).json({
+//         error: "User not found."
+//       });
+//     }
+//     user_find = user;
+//     user.groups.push(group._id); // adds profile object in req with user info
+//     user.save(err => {
+//       if (err) {
+//         return res.status(400).json({
+//           error: err
+//         });
+//       }
+//     });
+//   });
+//   group.save(err => {
+//     if (err) {
+//       return res.status(400).json({
+//         error: err
+//       });
+//     }
+//     res.json({
+//       group: group,
+//       user: user_find
+//     });
+//   });
+// //   next();
+// };
+
+exports.joinGroup = (req, res) => {
+  Group.findByIdAndUpdate(
+    req.body.groupId,
+    { $push: { members: req.body.userId } },
+    { new: true } // required by Mongoose
+  ).exec((err, result) => {
     if (err) {
       return res.status(400).json({
         error: err
       });
+    } else {
+      res.json(result);
     }
-    res.json({
-      group: group,
-      user: user_find
-    });
   });
-//   next();
+};
+
+exports.unjoinGroup = (req, res) => {
+  Group.findByIdAndUpdate(
+    req.body.groupId,
+    { $pull: { members: req.body.userId } },
+    { new: true } // required by Mongoose
+  ).exec((err, result) => {
+    if (err) {
+      return res.status(400).json({
+        error: err
+      });
+    } else {
+      res.json(result);
+    }
+  });
+};
+
+// exports.groupsByTag = (req, res, next, tag) => {
+//   let tag = req.tag;
+//   console.log(tag);
+//   Group.find({ tags: tag })
+//     .populate("createdBy", "_id name")
+//     .populate("members", "_id name")
+//     .sort("_created")
+//     // .select("_id name location created tags about photo")
+//     .exec((err, groups) => {
+//       if (err || !groups) {
+//         return res.status(400).json({
+//           error: err
+//         });
+//       }
+//       res.json(groups);
+//       // next();
+//     });
+// };
+
+exports.groupsByTagMidware = (req, res, next, tag) => {
+  console.log(tag);
+  Group.find({ tags: tag.toLowerCase() }) // Group.find({name: "cooking"})
+    .populate("createdBy", "_id name")
+    .populate("members", "_id name")
+    .sort("_created")
+    // .select("_id name location created tags about photo")
+    .exec((err, groups) => {
+      if (err || !groups) {
+        return res.status(400).json({
+          error: err
+        });
+      }
+      req.groups = groups;
+      next();
+    });
+};
+
+exports.groupsByTag = (req, res) => {
+  res.json(req.groups);
 };

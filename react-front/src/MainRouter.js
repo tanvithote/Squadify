@@ -12,21 +12,39 @@ import NewPost from "./post/NewPost";
 import Posts from "./post/Posts";
 import SinglePost from "./post/SinglePost";
 import EditPost from "./post/EditPost";
+import NewGroup from "./group/NewGroup";
+import SingleGroup from "./group/SingleGroup";
+import EditGroup from "./group/EditGroup";
+import Groups from "./group/Groups";
+import SearchGroups from "./group/SearchGroups";
 
 const MainRouter = () => (
   <div>
     <Menu />
     <Switch>
+      {/* Routes for authentications */}
       <Route exact path="/signin" component={SignInSide} />
       <Route exact path="/" component={Home} />
       <Route exact path="/users" component={Users} />
       <Route exact path="/signup" component={Signup} />
+
+      {/* Routes for profile */}
       <Route exact path="/user/:userId" component={Profile} />
       <PrivateRoute exact path="/user/edit/:userId" component={EditProfile} />
+
+      {/* Routes for posts */}
       <PrivateRoute exact path="/post/create" component={NewPost} />
       <PrivateRoute exact path="/post/edit/:postId" component={EditPost} />
       <Route exact path="/posts" component={Posts} />
       <Route exact path="/post/:postId" component={SinglePost} />
+
+
+      {/* Routes for groups */}
+      <PrivateRoute exact path="/group/create" component={NewGroup} />
+      <Route exact path="/group/:groupId" component={SingleGroup} />
+      <PrivateRoute exact path="/group/edit/:groupId" component={EditGroup} />
+      <Route exact path="/groups" component={Groups} />
+      <Route exact path="/groups/search/:tag" component={SearchGroups} />
     </Switch>
   </div>
 );

@@ -10,40 +10,58 @@ const isActive = (history, path) => {
   }
 };
 
+var query = "";
+
+const queryChange = evt => {
+  query = evt.target.value;
+  return query;
+};
+
+const handleSearch = () => {
+  this.context.router.push(`/groups/search/${query}`);
+};
+
 const Menu = ({ history }) => (
-//   <nav className='navbar navbar-dark bg-dark navbar-expand-lg'>
-//     <div className='container'>
-//       <a className='navbar-brand' href=''>SQUADIFY</a>
-//       <img src="/docs/4.3/assets/brand/bootstrap-solid.svg" width="30" height="30" alt=""></img>
-//       <form className='form-inline my-2 my-lg-0'>
-//         <input className='form-control mr-sm-2 bwm-search' type='search' placeholder="Search Groups" aria-label='Search'></input>
-//         <button className='btn btn-outline-success my-2 my-sm-0 btn-bwm-search' type='submit'>Search</button>
-//       </form>
-//       <button className='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbarNavAltMarkup' aria-controls='navbarNavAltMarkup' aria-expanded='false' aria-label='Toggle navigation'>
-//         <span className='navbar-toggler-icon'></span>
-//       </button>
-//       <div className='collapse navbar-collapse' id='navbarNavAltMarkup'>
-//         <div className='navbar-nav ml-auto'>
-//           <a className='nav-item nav-link active' href=''>Login <span className='sr-only'>(current)</span></a>
-//           <a className='nav-item nav-link' href=''>Register</a>
-//         </div>
-//       </div>
-//     </div>
-// </nav>
+  //   <nav className='navbar navbar-dark bg-dark navbar-expand-lg'>
+  //     <div className='container'>
+  //       <a className='navbar-brand' href=''>SQUADIFY</a>
+  //       <img src="/docs/4.3/assets/brand/bootstrap-solid.svg" width="30" height="30" alt=""></img>
+  //       <form className='form-inline my-2 my-lg-0'>
+  //         <input className='form-control mr-sm-2 bwm-search' type='search' placeholder="Search Groups" aria-label='Search'></input>
+  //         <button className='btn btn-outline-success my-2 my-sm-0 btn-bwm-search' type='submit'>Search</button>
+  //       </form>
+  //       <button className='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbarNavAltMarkup' aria-controls='navbarNavAltMarkup' aria-expanded='false' aria-label='Toggle navigation'>
+  //         <span className='navbar-toggler-icon'></span>
+  //       </button>
+  //       <div className='collapse navbar-collapse' id='navbarNavAltMarkup'>
+  //         <div className='navbar-nav ml-auto'>
+  //           <a className='nav-item nav-link active' href=''>Login <span className='sr-only'>(current)</span></a>
+  //           <a className='nav-item nav-link' href=''>Register</a>
+  //         </div>
+  //       </div>
+  //     </div>
+  // </nav>
   <div>
     <ul className="navbar navbar-dark bg-dark navbar-expand-lg">
       <li className="navbar-brand color:white">
-        <Link className="nav-link text-color:" style={isActive(history, "/home")} to="/home">
+        <Link
+          className="nav-link text-color:"
+          style={isActive(history, "/home")}
+          to="/home"
+        >
           HOME
         </Link>
       </li>
-
-       <li className="nav-item">
-        <Link className="nav-link" style={isActive(history, "/users")} to="/users">
+      <li className="nav-item">
+        <Link
+          className="nav-link"
+          style={isActive(history, "/users")}
+          to="/users"
+        >
           Users
         </Link>
-      </li> 
-.
+      </li>
+      .
       {!isAuthenticated() && (
         <>
           <li className="nav-item nav-link active text-right">
@@ -66,7 +84,6 @@ const Menu = ({ history }) => (
           </li>
         </>
       )}
-
       {isAuthenticated() && (
         <>
           <li className="nav-item">
@@ -76,6 +93,15 @@ const Menu = ({ history }) => (
               style={isActive(history, "/post/create")}
             >
               Create new Post
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link
+              className="nav-link"
+              to={"/group/create"}
+              style={isActive(history, "/group/create")}
+            >
+              Create new group
             </Link>
           </li>
           <li className="nav-item">
@@ -101,6 +127,27 @@ const Menu = ({ history }) => (
           </li>
         </>
       )}
+      <li className="nav-item">
+        <div>
+          <form>
+            <input
+              type="text"
+              placeholder="Search.."
+              name="search"
+              onChange={queryChange}
+            />
+            {/* <button onClick={handleSearch}>
+              {/* <i class="fa fa-search"></i> */}
+            {/* </button> */}
+            <Link
+              to={`/groups/search/${query}`}
+              style={isActive(history, `/groups/search/${query}`)}
+            >
+              <i class="fa fa-search"></i>
+            </Link>
+          </form>
+        </div>
+      </li>
     </ul>
   </div>
 );

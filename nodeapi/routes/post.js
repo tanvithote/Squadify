@@ -1,4 +1,5 @@
 const express = require("express");
+
 const {
   getPosts,
   createPost,
@@ -14,6 +15,7 @@ const {
   comment,
   uncomment
 } = require("../controllers/post");
+
 const { createPostValidators } = require("../validators");
 const { userById } = require("../controllers/user");
 const { requireSignin } = require("../controllers/auth");
