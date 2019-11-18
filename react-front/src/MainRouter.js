@@ -21,11 +21,12 @@ import NewEvent from "./event/NewEvent";
 
 const MainRouter = () => (
   <div>
-    <Menu />
+    {/* <Menu /> */}
     <Switch>
       {/* Routes for authentications */}
       <Route exact path="/signin" component={SignInSide} />
-      <Route exact path="/" component={Home} />
+      <Route exact path="/home" component={Home} />
+      <Route exact path="/" component={SignInSide} />
       <Route exact path="/users" component={Users} />
       <Route exact path="/signup" component={Signup} />
 

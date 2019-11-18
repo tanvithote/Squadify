@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { list } from "./apiGroup";
 import { Link } from "react-router-dom";
 import DefaultPost from "../images/tea.jpg";
+import Menu from "../core/Menu";
 
 class Groups extends Component {
   constructor() {
@@ -81,8 +82,9 @@ class Groups extends Component {
     return (
       <>
         <div>
+          <Menu/>
           <form>
-            <input
+            {/* <input
               type="text"
               placeholder="Search.."
               name="search"
@@ -92,9 +94,9 @@ class Groups extends Component {
             {/* <button onClick={handleSearch}>
               {/* <i class="fa fa-search"></i> */}
             {/* </button> */}
-            <Link to={`/groups/search/${query}`}>
+            {/* <Link to={`/groups/search/${query}`}>
               <i class="fa fa-search"></i>
-            </Link>
+            </Link>  */}
           </form>
         </div>
         <div className="container fluid">

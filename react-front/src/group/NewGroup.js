@@ -3,6 +3,12 @@ import { isAuthenticated } from "../auth";
 import { create, joinGroup } from "./apiGroup";
 import { Redirect } from "react-router-dom";
 import DefaultPost from "../images/tea.jpg";
+import Menu from "../core/Menu";
+import { Col, FormControl } from 'react-bootstrap';
+import Form from 'react-bootstrap/Form';
+import InputGroup from 'react-bootstrap/InputGroup'
+
+
 
 class NewGroup extends Component {
   constructor() {
@@ -65,6 +71,7 @@ class NewGroup extends Component {
       passInValue === "location" ? event.target.value.toLowerCase() : "";
     this.groupData.set(passInValue, value);
     this.setState({ [passInValue]: value, fileSize: fileSize });
+    
   };
 
   clickSubmit = event => {
@@ -100,8 +107,9 @@ class NewGroup extends Component {
 
   newGroupForm = (name, location, tags, about) => (
     <form>
+    
       <div className="form-group">
-        <label className="text-muted">Name</label>
+        <label className="text-dark">Name</label>
         <input
           onChange={this.handleChange("name")}
           type="text"
@@ -109,8 +117,9 @@ class NewGroup extends Component {
           value={name}
         ></input>
       </div>
+    
       <div className="form-group">
-        <label className="text-muted">Description</label>
+        <label className="text-dark">Description</label>
         <textarea
           onChange={this.handleChange("about")}
           type="text"
@@ -119,7 +128,7 @@ class NewGroup extends Component {
         ></textarea>
       </div>
       <div className="form-group">
-        <label className="text-muted">Location</label>
+        <label className="text-dark">Location</label>
         <textarea
           onChange={this.handleChange("location")}
           type="text"
@@ -128,8 +137,19 @@ class NewGroup extends Component {
           placeholder="Bloomington, IN"
         ></textarea>
       </div>
+      {/* <Form.Group controlId="formGridState">
+      <Form.Label>Tags</Form.Label>
+      <Form.Control as="select">
+      onChange={this.handleChange("tags")}
+        <option> </option>
+        <option>Trekking</option>
+        <option>Tennis</option>
+        <option>Cooking</option>
+        <option>Cooking Italian</option>
+      </Form.Control>
+    </Form.Group> */}
       <div className="form-group">
-        <label className="text-muted">Tags</label>
+        <label className="text-dark">Tags</label>
         <textarea
           onChange={this.handleChange("tags")}
           type="text"
@@ -139,7 +159,7 @@ class NewGroup extends Component {
         ></textarea>
       </div>
       <div className="form-group">
-        <label className="text-muted">Upload a cover photo</label>
+        <label className="text-dark">Upload a cover photo</label>
         <input
           onChange={this.handleChange("photo")}
           type="file"
@@ -147,7 +167,7 @@ class NewGroup extends Component {
           className="form-control"
         ></input>
       </div>
-      <button onClick={this.clickSubmit} className="btn btn-raised btn-primary">
+      <button onClick={this.clickSubmit} className="btn btn-raised btn-info">
         Create Group
       </button>
     </form>
@@ -177,12 +197,23 @@ class NewGroup extends Component {
     //   : DefaultProfile;
 
     return (
-      <div className="container">
-        <h2 className="mt-5 mb-5">Create a new group</h2>
-        {error && <div className="alert alert-danger">{error}</div>}
+    <div>
+      <Menu/>
+      <div class="split left">
+        <div class="centered">
+          <div  className="container">
+          <h2 className="mt-5 mb-5">Create a new group</h2>
+          {error && <div className="alert alert-danger">{error}</div>}
 
-        {this.newGroupForm(name, location, tags, about)}
+          {this.newGroupForm(name, location, tags, about)}
+          </div>
+        </div>
       </div>
+      <div class="split right">
+        <div class="centered">
+        </div>
+      </div>  
+    </div>
     );
   }
 }
