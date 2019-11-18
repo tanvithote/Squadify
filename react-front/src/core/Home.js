@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import Menu from "./Menu";
-import image from '../images/home2.png';
+import image from '../images/home2 (1).png';
 import image2 from '../images/home.png';
 
 
@@ -18,7 +18,7 @@ const Home = () => (
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        height: "50vh"
+        height: "70vh"
       }}
     >
 
@@ -30,14 +30,14 @@ const Home = () => (
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        height: "50vh"
+        height: "20vh"
       }}
     >
     {/* <h2 m class="heroPrimary">Find your next event</h2> */}
     {/* backgroundImage: `url("${image}")`; */}
     
     
-    </div>
+   </div>
   </>
 );
 
