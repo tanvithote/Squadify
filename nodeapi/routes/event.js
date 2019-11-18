@@ -7,11 +7,7 @@ const { groupById } = require('../controllers/group');
 const router = express.Router();
 
 router.get('/events', getEvents);
-router.post(
-    '/event/new/:userId/:groupId', 
-    requireSignin, 
-    createEvent   
-);
+router.post('/event/new/:userId/:groupId',requireSignin,createEvent);
 router.get('/event/:eventId',requireSignin, getEvent);
 router.get('/events/by/:groupId', requireSignin, eventsByGroup);
 router.put('/event/:eventId', requireSignin, isCreator, updateEvent);

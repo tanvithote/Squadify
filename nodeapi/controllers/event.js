@@ -24,16 +24,50 @@ exports.getEvent = (req, res)=> {
   };
 
 exports.getEvents = (req, res) => {
-  const events = Events.find()
-    .populate("group","_id name")
-    .select("_id name location")
+  const events = Event.find()
     .then(events => {
       res.json({ events: events });
     })
     .catch(err => console.log(err));
 };
 
-exports.createEvent = (req, res, next) => {
+// exports.createEvent = (req, res) => {
+//   let form = new formidable.IncomingForm();
+//   form.keepExtensions = true;
+//   form.parse(req, (err, fields, files) => {
+//     if (err) {
+//       return res.status(400).json({
+//         error: "Image could not be uploaded"
+//       });
+//     }
+//     let event = new Event(fields);
+//     req.profile.hashed_password = undefined;
+//     req.profile.salt = undefined;
+    
+//     event.createdBy = req.profile;
+//     event.group = req.group;
+//     if (files.photo) {
+//       event.photo.data = fs.readFileSync(files.photo.path);
+//       event.photo.contentType = files.photo.type;
+//     }
+//     event.save((err, result) => {
+//       if (err) {
+//         return res.status(400).json({
+//           error: err
+//         });
+//       }
+//       res.json(result);
+//     });
+//   });
+//   const event = new Event(req.body);
+//   event.save().then(result => {
+//     res.status(200).json({
+//       event: result
+//     });
+//   });
+// };
+
+exports.createEvent = (req, res) => {
   let form = new formidable.IncomingForm();
   form.keepExtensions = true;
   form.parse(req, (err, fields, files) => {
@@ -71,6 +105,7 @@ exports.createEvent = (req, res, next) => {
 };
 
 exports.eventsByGroup = (req, res) => {
+  console.log("in method");
   Event.find({ group: req.group._id })
     .populate("group", "_id name")
     .sort("_created")
@@ -87,9 +122,6 @@ exports.eventsByGroup = (req, res) => {
 exports.isCreator = (req, res, next) => {
   let isCreator =
     req.event && req.auth && req.event.createdBy._id == req.auth._id;
-    console.log(req.event.createdBy._id);
-    console.log(req.auth._id);
-
   if (!isCreator) {
     return res.status(403).json({
       error: "User is not authorized"
@@ -125,36 +157,40 @@ exports.deleteEvent = (req, res) => {
   });
 };
 
-exports.attendEvent = (req, res, next) => {
-  let event = req.event;
-  event.attendes.push(req.auth._id);
-  let user_find = null;
-  User.findById(req.auth._id).exec((err, user) => {
-    if (err || !user) {
-      return res.status(400).json({
-        error: "User not found."
-      });
-    }
-    user_find = user;
-    user.event.push(event._id); // adds profile object in req with user info
-    user.save(err => {
-      if (err) {
-        return res.status(400).json({
-          error: err
-        });
-      }
-    });
-  });
-  event.save(err => {
+exports.attendEvent = (req, res) => {
+  console.log(req.event._id);
+  console.log(req.auth._id);
+  
+  let event_Data=null;
+  Event.findByIdAndUpdate(
+    req.event._id,
+    { $addToSet: { attendes: req.auth._id } },
+    { new: true } // required by Mongoose
+  ).exec((err, result) => {
     if (err) {
       return res.status(400).json({
         error: err
       });
+    } else {
+      event_Data=result;
     }
-    res.json({
-      Event: event,
-      user: user_find
-    });
   });
-//   next();
+
+  User.findByIdAndUpdate(
+    req.auth._id,
+    { $addToSet :{events:req.event._id}},
+    {new :true}
+    ).exec((err,result)=>{
+      if(err){
+        return res.status(400).json({
+          error : err
+        });
+      }else{
+        res.json({
+            event : event_Data,
+            user: result
+        });
+      }
+    });
 };
+

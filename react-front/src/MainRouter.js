@@ -17,6 +17,7 @@ import SingleGroup from "./group/SingleGroup";
 import EditGroup from "./group/EditGroup";
 import Groups from "./group/Groups";
 import SearchGroups from "./group/SearchGroups";
+import NewEvent from "./event/NewEvent";
 
 const MainRouter = () => (
   <div>
@@ -45,6 +46,9 @@ const MainRouter = () => (
       <PrivateRoute exact path="/group/edit/:groupId" component={EditGroup} />
       <Route exact path="/groups" component={Groups} />
       <Route exact path="/groups/search/:tag" component={SearchGroups} />
+
+      {/* Routes for Events*/}
+      <PrivateRoute exact path="/event/create" component={NewEvent} />
     </Switch>
   </div>
 );

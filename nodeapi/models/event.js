@@ -40,9 +40,9 @@ const eventSchema = new mongoose.Schema({
       ref: "User"
   },
   tags: [String],
-  group:{
+  group: {
     type: ObjectId,
-    ref:"Group"
+    ref: "Group"
   }
 });
 

@@ -13,7 +13,9 @@ class SingleGroup extends Component {
     redirectToSignin: false,
     joined: false,
     members: [],
-    tags: []
+    tags: [],
+    events:[]
+
   };
 
   updateMembers = members => {
@@ -127,13 +129,23 @@ class SingleGroup extends Component {
             >
               Join the group
             </button>
+           
           </div>
+          
         )}
 
-        <br />
-        <br />
-        <br />
 
+        <br />
+        <br />
+        <br />
+        <div className="float-right">
+        <Link
+                    to={`/event/create`}
+                    className="btn btn-raised btn-primary btn-sm"
+                  >
+                    Create Event
+                  </Link>
+        </div>
         <p className="card-text">{group.about}</p>
         <br />
         <div class="card-footer text-muted">
@@ -160,9 +172,9 @@ class SingleGroup extends Component {
                   </button>
                 </>
               )}
-            {/* <Link to={`/groups`} className="btn btn-raised btn-primary btn-sm">
+             <Link to={`/groups`} className="btn btn-raised btn-primary btn-sm">
               Back to all groups
-            </Link> */}
+            </Link>
           </div>
         </div>
       </div>
