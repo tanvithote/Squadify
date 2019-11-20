@@ -5,13 +5,8 @@ import { Redirect } from "react-router-dom";
 import 'date-fns';
 import DefaultPost from "../images/tea.jpg";
 import Grid from '@material-ui/core/Grid';
+import {MuiPickersUtilsProvider,KeyboardTimePicker,KeyboardDatePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
-import {
-  MuiPickersUtilsProvider,
-  KeyboardTimePicker,
-  KeyboardDatePicker,
-} from '@material-ui/pickers';
-
 
 class NewEvent extends Component {
 
@@ -27,8 +22,9 @@ class NewEvent extends Component {
       group:"",
       tags: [],
       fileSize: 0,
-      starttime: "",
-      endtime:"" ,
+      eventdate: new Date(),
+      starttime: new Date(),
+      endtime: new Date (),
       redirectToGroups: false
     };
   }
@@ -82,6 +78,18 @@ class NewEvent extends Component {
 
   };
 
+  handleDateChange=date=>{
+    this.setState({eventdate:date});
+  }
+
+  handleStartTimeChange=time=>{
+    this.setState({starttime:time});
+  }
+
+  handleEndTimeChange=time=>{
+    this.setState({endtime:time});
+  }
+
   clickSubmit = event => {
     event.preventDefault();
 
@@ -102,8 +110,9 @@ class NewEvent extends Component {
             error: "",
             tags: [],
             group:"",
-            starttime: "",
-            endtime:"",
+            eventdate: new Date(),
+            starttime: new Date(),
+            endtime:new Date(),
             redirectToGroups: true
           });
           //   updateUser(data, () => {
@@ -115,7 +124,7 @@ class NewEvent extends Component {
       });
     }
   };
-  newEventForm = (name, location, tags, description ,starttime,endtime) => (
+  newEventForm = (name, location, tags, description ,starttime,endtime,eventdate) => (
 
     <form >
       <div className="form-group">
@@ -146,25 +155,45 @@ class NewEvent extends Component {
           placeholder="Bloomington, IN"
         ></textarea>
       </div>
-      <div class="form-group">
-      <label className="text-muted">starttime</label>
-         <input
-          onChange={this.handleChange("starttime")}
-          type="text"
-          className="form-control timepicker"
-          value={endtime}
-          placeholder="9:00 pm"
-        ></input>
-      </div>
       <div className="form-group">
-        <label className="text-muted">endtime</label>
-         <input
-          onChange={this.handleChange("endtime")}
-          type="text"
-          className="form-control"
+      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+      <Grid container >
+        <KeyboardDatePicker
+          variant="inline"
+          format="MM/dd/yyyy"
+          margin="normal"
+          id="eventdate"
+          label="Event Date "
+          value={eventdate}
+          onChange={this.handleDateChange}
+          KeyboardButtonProps={{
+            "aria-label": "change date"
+          }}
+        />
+        <KeyboardTimePicker
+
+          margin="normal"
+          id="time-picker"
+          label="Start Time For Event "
+          value={starttime}
+          onChange={this.handleStartTimeChange}
+          KeyboardButtonProps={{
+            "aria-label": "change time"
+          }}
+        />
+        <KeyboardTimePicker
+
+          margin="normal"
+          id="time-picker"
+          label="End Time For Event"
           value={endtime}
-          placeholder="9:00 pm"
-        ></input>
+          onChange={this.handleEndTimeChange}
+          KeyboardButtonProps={{
+            "aria-label": "change time"
+          }}
+        />
+      </Grid>
+    </MuiPickersUtilsProvider>
       </div>
       <div className="form-group">
         <label className="text-muted">Tags</label>
@@ -201,6 +230,7 @@ class NewEvent extends Component {
       group,
       tags,
       error,
+      eventdate,
       starttime,
       endtime,
       redirectToGroups
@@ -222,7 +252,7 @@ class NewEvent extends Component {
         <h2 className="mt-5 mb-5">Create a new Event for Group </h2>
         {error && <div className="alert alert-danger">{error}</div>}
 
-        {this.newEventForm(name, location, tags, description,starttime,endtime)}
+        {this.newEventForm(name, location, tags, description,starttime,endtime,eventdate)}
       </div>
     );
   }
