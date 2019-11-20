@@ -34,7 +34,8 @@ const groupSchema = new mongoose.Schema({
       type: [ObjectId],
       ref: "User"
   },
-  tags: [String]
+  tags: [String],
+  posts: [{ type: ObjectId, ref: "Post" }]
 });
 
 // methods

@@ -14,8 +14,7 @@ class SingleGroup extends Component {
     joined: false,
     members: [],
     tags: [],
-    events:[]
-
+    events: []
   };
 
   updateMembers = members => {
@@ -129,28 +128,32 @@ class SingleGroup extends Component {
             >
               Join the group
             </button>
-           
           </div>
-          
         )}
-
 
         <br />
         <br />
         <br />
         <div className="float-right">
-        <Link
-                    to={`/event/create`}
-                    className="btn btn-raised btn-primary btn-sm"
-                  >
-                    Create Event
-                  </Link>
+          <Link
+            to={`/group/${groupId}/post/create`}
+            className="btn btn-raised btn-primary btn-sm mr-2"
+          >
+            Create a post
+          </Link>
+
+          <Link
+            to={`/event/create`}
+            className="btn btn-raised btn-primary btn-sm"
+          >
+            Create Event
+          </Link>
         </div>
         <p className="card-text">{group.about}</p>
         <br />
         <div class="card-footer text-muted">
           <p>
-            Group Administrator <Link to={`${creatorId}`}>{creatorName} </Link>
+            Group Administrator <Link to={`/user/${creatorId}`}>{creatorName} </Link>
             {/* on {new Date(group.created).toDateString()} */}
           </p>
           <div className="d-inline-block">
@@ -172,7 +175,7 @@ class SingleGroup extends Component {
                   </button>
                 </>
               )}
-             <Link to={`/groups`} className="btn btn-raised btn-primary btn-sm">
+            <Link to={`/groups`} className="btn btn-raised btn-primary btn-sm">
               Back to all groups
             </Link>
           </div>

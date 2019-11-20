@@ -31,7 +31,11 @@ const postSchema = new mongoose.Schema({
       postedBy: { type: ObjectId, ref: "User" }
       // postedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" }
     }
-  ]
+  ],
+  group: {
+    type: ObjectId,
+    ref: "Group"
+  }
 });
 
 module.exports = mongoose.model("Post", postSchema);

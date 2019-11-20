@@ -12,7 +12,8 @@ class Posts extends Component {
   }
 
   componentDidMount() {
-    list().then(data => {
+    this.groupId = this.props.match.params.groupId;
+    list(this.groupId).then(data => {
       if (data.error) {
         console.log(data.error);
       } else {

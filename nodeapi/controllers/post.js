@@ -1,14 +1,14 @@
 const Post = require("../models/post");
+const Group = require("../models/group");
 const formidable = require("formidable");
 const fs = require("fs");
 const _ = require("lodash");
 
-
 exports.postById = (req, res, next, id) => {
   Post.findById(id)
     .populate("postedBy", "_id name")
-    .populate('comments.postedBy', '_id name')
-    .select('_id title body created likes comments photo')
+    .populate("comments.postedBy", "_id name")
+    // .select("_id title body created likes comments photo group")
     .exec((err, post) => {
       if (err || !post) {
         return res.status(400).json({
@@ -36,17 +36,32 @@ exports.postById = (req, res, next, id) => {
 //       });
 // };
 
-exports.getPosts = (req, res) => {
-  const posts = Post.find()
+// exports.getPosts = (req, res) => {
+//   const posts = Post.find()
+//     .populate("postedBy", "_id name")
+//     .populate('comments', 'text created')
+//     .populate('comments.postedBy', '_id name')
+//     .select("_id title body created likes")
+//     .sort({ created: -1 })
+//     .then(posts => {
+//       res.json(posts);
+//     })
+//     .catch(err => console.log(err));
+// };
+
+exports.postsByGroup = (req, res) => {
+  Post.find({ group: req.group._id })
     .populate("postedBy", "_id name")
-    .populate('comments', 'text created')
-    .populate('comments.postedBy', '_id name')
-    .select("_id title body created likes")
-    .sort({ created: -1 })
-    .then(posts => {
+    .select("_id title body created comments likes")
+    .sort("_created")
+    .exec((err, posts) => {
+      if (err) {
+        return res.status(400).json({
+          error: err
+        });
+      }
       res.json(posts);
-    })
-    .catch(err => console.log(err));
+    });
 };
 
 exports.createPost = (req, res, next) => {
@@ -64,10 +79,31 @@ exports.createPost = (req, res, next) => {
     req.profile.salt = undefined;
 
     post.postedBy = req.profile;
+    post.group = req.group;
     if (files.photo) {
       post.photo.data = fs.readFileSync(files.photo.path);
       post.photo.contentType = files.photo.type;
     }
+
+    // Push this post to corresponding group
+    Group.findByIdAndUpdate(
+      req.group._id,
+      { $push: { posts: post._id } },
+      { new: true }
+    ).exec((err, result) => {
+      if (err) {
+        return res.status(400).json({
+          error: err
+        });
+      } else {
+        console.log(`Post ${post._id} pushed to its group`);
+        // res.json(result);
+        // res.json({
+        //   group: result
+        // });
+      }
+    });
+
     post.save((err, result) => {
       if (err) {
         return res.status(400).json({
@@ -77,12 +113,15 @@ exports.createPost = (req, res, next) => {
       res.json(result);
     });
   });
-  const post = new Post(req.body);
-  post.save().then(result => {
-    res.status(200).json({
-      post: result
-    });
-  });
+
+  // this part will be deleted later
+  // const post = new Post(req.body);
+  // post.save().then(result => {
+  //   // Push this post to corresponding group
+  //   res.status(200).json({
+  //     post: result
+  //   });
+  // });
 };
 
 exports.postsByUser = (req, res) => {
@@ -126,6 +165,23 @@ exports.updatePost = (req, res, next) => {
 
 exports.deletePost = (req, res) => {
   let post = req.post;
+  let group = post.group;
+
+  // remove the post from it's group's "posts" field
+  Group.findByIdAndUpdate(
+    group, // group id stored in post
+    { $pull: { posts: post._id } },
+    { new: true }
+  ).exec((err, result) => {
+    if (err) {
+      return res.status(400).json({
+        error: err
+      });
+    } else {
+      console.log(`Post ${post._id} deleted from group ${group}`);
+    }
+  });
+
   post.remove((err, post) => {
     if (err) {
       return res.status(400).json({
@@ -181,37 +237,35 @@ exports.updatePost = (req, res, next) => {
 };
 
 exports.like = (req, res) => {
-
   Post.findByIdAndUpdate(
     req.body.postId,
     { $push: { likes: req.body.userId } },
     { new: true } // required by Mongoose
   ).exec((err, result) => {
-      if (err) {
-        return res.status(400).json({
-          error: err
-        });
-      } else {
-        res.json(result);
-      }
-    });
+    if (err) {
+      return res.status(400).json({
+        error: err
+      });
+    } else {
+      res.json(result);
+    }
+  });
 };
 
 exports.unlike = (req, res) => {
-
   Post.findByIdAndUpdate(
     req.body.postId,
     { $pull: { likes: req.body.userId } },
     { new: true } // required by Mongoose
   ).exec((err, result) => {
-      if (err) {
-        return res.status(400).json({
-          error: err
-        });
-      } else {
-        res.json(result);
-      }
-    });
+    if (err) {
+      return res.status(400).json({
+        error: err
+      });
+    } else {
+      res.json(result);
+    }
+  });
 };
 
 exports.comment = (req, res) => {
@@ -237,22 +291,22 @@ exports.comment = (req, res) => {
 };
 
 exports.uncomment = (req, res) => {
-    let comment = req.body.comment;
-    
-    Post.findByIdAndUpdate(
-      req.body.postId,
-      { $pull: { comments: {_id: comment._id} } },
-      { new: true }
-    )
-      .populate("comments.postedBy", "_id name")
-      .populate("postedBy", "_id name")
-      .exec((err, result) => {
-        if (err) {
-          return res.status(400).json({
-            error: err
-          });
-        } else {
-          res.json(result);
-        }
-      });
-  };
+  let comment = req.body.comment;
+
+  Post.findByIdAndUpdate(
+    req.body.postId,
+    { $pull: { comments: { _id: comment._id } } },
+    { new: true }
+  )
+    .populate("comments.postedBy", "_id name")
+    .populate("postedBy", "_id name")
+    .exec((err, result) => {
+      if (err) {
+        return res.status(400).json({
+          error: err
+        });
+      } else {
+        res.json(result);
+      }
+    });
+};

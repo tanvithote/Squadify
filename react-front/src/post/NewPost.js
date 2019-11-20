@@ -21,6 +21,7 @@ class NewPost extends Component {
   componentDidMount() {
     this.postData = new FormData();
     this.setState({ user: isAuthenticated().user });
+    this.groupId = this.props.match.params.groupId;
   }
 
   isValid = () => {
@@ -59,8 +60,10 @@ class NewPost extends Component {
     if (this.isValid()) {
       const userId = isAuthenticated().user._id;
       const token = isAuthenticated().token;
+      const groupId = this.groupId;
+      console.log(groupId);
 
-      create(userId, token, this.postData).then(data => {
+      create(userId, groupId, token, this.postData).then(data => {
         if (data.error) {
           this.setState({ error: data.error });
         } else {
@@ -122,7 +125,7 @@ class NewPost extends Component {
 
     if (redirectToProfile) {
       // return <Redirect to={`/user/${user._id}`} />;
-      return <Redirect to={`/posts`} />;
+      return <Redirect to={`/group/${this.groupId}/posts`} />;
     }
 
     // const photoUrl = id

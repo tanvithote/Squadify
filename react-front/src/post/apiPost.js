@@ -1,5 +1,5 @@
-export const create = (userId, token, post) => {
-  return fetch(`${process.env.REACT_APP_API_URL}/post/new/${userId}`, {
+export const create = (userId, groupId, token, post) => {
+  return fetch(`${process.env.REACT_APP_API_URL}/${groupId}/post/new/${userId}`, {
     method: "POST",
     headers: {
       Accept: "application/json",
@@ -13,8 +13,8 @@ export const create = (userId, token, post) => {
     .catch(err => console.log(err));
 };
 
-export const list = () => {
-  return fetch(`${process.env.REACT_APP_API_URL}/posts`, {
+export const list = (groupId) => {
+  return fetch(`${process.env.REACT_APP_API_URL}/${groupId}/posts`, {
     method: "GET"
   })
     .then(response => {
