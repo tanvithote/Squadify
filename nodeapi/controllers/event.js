@@ -83,6 +83,7 @@ exports.createEvent = (req, res) => {
 
     event.createdBy = req.profile;
     event.group = req.group;
+    event.attendes = req.profile._id;
     if (files.photo) {
       event.photo.data = fs.readFileSync(files.photo.path);
       event.photo.contentType = files.photo.type;
@@ -145,15 +146,29 @@ exports.updateEvent = (req, res, next) => {
 
 exports.deleteEvent = (req, res) => {
   let event = req.event;
+  let groupId=req.event.group;
   event.remove((err, event) => {
     if (err) {
       return res.status(400).json({
         error: err
       });
     }
-    res.json({
-      message: "Event deleted succesfully"
-    });
+  });
+
+  Group.findByIdAndUpdate(
+    groupId,
+    {$pull :{events:req.event._id}},
+    {new:true}
+  ).exec((err,result)=>{
+    if(err){
+      return res.status(400).json({
+        error : err
+      });
+    }else{
+      res.json({
+        message : "Event Successfully deleted"
+      });
+    }
   });
 };
 
@@ -194,3 +209,36 @@ exports.attendEvent = (req, res) => {
     });
 };
 
+exports.notAttendEventGroup = (req, res) => {
+  let event_Data = null;
+  Event.findByIdAndUpdate(
+    req.body.groupId,
+    { $pull: { attendes: req.body.userId } },
+    { new: true } // required by Mongoose
+  ).exec((err, result) => {
+    if (err) {
+      return res.status(400).json({
+        error: err
+      });
+    } else {
+      event_Data=result;
+    }
+  });
+
+  User.findByIdAndUpdate(
+    req.auth._id,
+    { $pull :{events:req.event._id}},
+    {new :true}
+    ).exec((err,result)=>{
+      if(err){
+        return res.status(400).json({
+          error : err
+        });
+      }else{
+        res.json({
+            event : event_Data,
+            user: result
+        });
+      }
+    });
+};
