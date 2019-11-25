@@ -14,7 +14,8 @@ const {
   like,
   unlike,
   comment,
-  uncomment
+  uncomment,
+  findGroupIdOfPost
 } = require("../controllers/post");
 
 const { createPostValidators } = require("../validators");
@@ -41,11 +42,11 @@ router.post(
   createPost,
   createPostValidators
 );
-router.get("posts/by/:userId", requireSignin, postsByUser); // get posts of this user in all groups?
+router.get("/posts/by/:userId", requireSignin, postsByUser); // get posts of this user in all groups?
 router.get("/post/:postId", singlePost);
 router.put("/post/:postId", requireSignin, isPoster, updatePost);
 router.delete("/post/:postId", requireSignin, isPoster, deletePost);
-
+router.get("/post/:postId/groupId", findGroupIdOfPost);
 
 // photo
 router.get("/post/photo/:postId", photo);

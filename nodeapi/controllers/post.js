@@ -310,3 +310,16 @@ exports.uncomment = (req, res) => {
       }
     });
 };
+
+exports.findGroupIdOfPost = (req, res) => {
+  Post.find({ _id: req.post._id })
+    .select("group")
+    .exec((err, post) => {
+      if (err) {
+        return res.status(400).json({
+          error: err
+        });
+      }
+      res.json(post);
+    });
+};

@@ -11,6 +11,7 @@ exports.userById = (req, res, next, id) => {
             });
         }
         req.profile = user; // adds profile object in req with user info
+        console.log(req.profile._id);
         next();
     });
 };
