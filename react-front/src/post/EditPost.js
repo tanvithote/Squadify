@@ -36,6 +36,7 @@ class EditPost extends Component {
     this.postData = new FormData();
     // console.log("user id from route params:", this.props.match.params.userId);
     const postId = this.props.match.params.postId;
+    this.groupId = this.props.match.params.groupId;
     this.init(postId);
   }
 
@@ -72,7 +73,7 @@ class EditPost extends Component {
       <button onClick={this.clickSubmit} className="btn btn-raised btn-primary">
         Update Post
       </button>
-      <Link to={`/post/${id}`} className="btn btn-raised btn-info ml-3">
+      <Link to={`/group/${this.groupId}/post/${id}`} className="btn btn-raised btn-info ml-3">
         Cancel Editing
       </Link>
     </form>
@@ -141,7 +142,7 @@ class EditPost extends Component {
       : DefaultPost;
 
     if (redirectToPosts) {
-      return <Redirect to={"/posts"} />;
+      return <Redirect to={`/group/${this.groupId}/posts`} />;
     }
 
     return (

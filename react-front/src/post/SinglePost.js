@@ -52,6 +52,7 @@ class SinglePost extends Component {
 
   componentDidMount = () => {
     const postId = this.props.match.params.postId;
+    this.groupId = this.props.match.params.groupId;
     singlePost(postId).then(data => {
       if (data.error) {
         console.log(data.error);
@@ -115,14 +116,14 @@ class SinglePost extends Component {
         <br />
         <div class="card-footer text-muted">
           <p>
-            Posted by <Link to={`${posterId}`}>{posterName} </Link>
+            Posted by <Link to={`/user/${posterId}`}>{posterName} </Link>
             on {new Date(post.created).toDateString()}
           </p>
           <div className="d-inline-block">
             {isAuthenticated().user && isAuthenticated().user._id === userId && (
               <>
                 <Link
-                  to={`/post/edit/${post._id}`}
+                  to={`/group/${this.groupId}/post/edit/${post._id}`}
                   className="btn btn-raised btn-info btn-sm mr-3"
                 >
                   Edit post
@@ -130,7 +131,7 @@ class SinglePost extends Component {
                 <DeletePost postId={post._id} />
               </>
             )}
-            <Link to={`/posts`} className="btn btn-raised btn-primary btn-sm">
+            <Link to={`group/${this.groupId}/posts`} className="btn btn-raised btn-primary btn-sm">
               Back to all posts
             </Link>
           </div>
@@ -143,7 +144,7 @@ class SinglePost extends Component {
     const { post, redirectToPosts, redirectToSignin, comments } = this.state;
 
     if (redirectToPosts) {
-      return <Redirect to={`/posts`} />;
+      return <Redirect to={`/group/${this.groupId}/posts`} />;
     } else if (redirectToSignin) {
       return <Redirect to={`/signin`} />;
     }
