@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { singlePost, like, unlike } from "./apiPost";
+import { singlePost, like, unlike, findGroupIdOfPost } from "./apiPost";
 import { Link, Redirect } from "react-router-dom";
 import DefaultPost from "../images/tea.jpg";
 import { isAuthenticated } from "../auth";
@@ -9,6 +9,7 @@ import Comment from "./Comment";
 class SinglePost extends Component {
   state = {
     post: "",
+    groupId: "",
     redirectToPosts: false,
     redirectToSignin: false,
     like: false,
@@ -52,7 +53,25 @@ class SinglePost extends Component {
 
   componentDidMount = () => {
     const postId = this.props.match.params.postId;
-    this.groupId = this.props.match.params.groupId;
+
+    // Get the group Id of the post if groupId is not given in the router
+    if (this.props.match.params.groupId === undefined) {
+      findGroupIdOfPost(postId).then(data => {
+        if (data.error) {
+          console.log(data.error);
+        } else {
+          console.log(data[0].group);
+          this.setState({
+            groupId: data[0].group
+          });
+        }
+      });
+    } else {
+      this.setState({
+        groupId: this.props.match.params.groupId
+      });
+    }
+
     singlePost(postId).then(data => {
       if (data.error) {
         console.log(data.error);
@@ -68,10 +87,10 @@ class SinglePost extends Component {
   };
 
   renderPost = post => {
-    const posterId = post.postedBy ? `/user/{post.postedBy._id}` : "";
+    const posterId = post.postedBy ? post.postedBy._id : "";
     const posterName = post.postedBy ? post.postedBy.name : " Unknown";
     const userId = post.postedBy ? post.postedBy._id : " Unknown";
-    const { like, likes } = this.state;
+    const { like, likes, groupId } = this.state;
 
     return (
       <div className="card-body">
@@ -123,7 +142,7 @@ class SinglePost extends Component {
             {isAuthenticated().user && isAuthenticated().user._id === userId && (
               <>
                 <Link
-                  to={`/group/${this.groupId}/post/edit/${post._id}`}
+                  to={`/group/${groupId}/post/edit/${post._id}`}
                   className="btn btn-raised btn-info btn-sm mr-3"
                 >
                   Edit post
@@ -131,7 +150,7 @@ class SinglePost extends Component {
                 <DeletePost postId={post._id} />
               </>
             )}
-            <Link to={`group/${this.groupId}/posts`} className="btn btn-raised btn-primary btn-sm">
+            <Link to={`/group/${groupId}/posts`} className="btn btn-raised btn-primary btn-sm">
               Back to all posts
             </Link>
           </div>
@@ -141,10 +160,10 @@ class SinglePost extends Component {
   };
 
   render() {
-    const { post, redirectToPosts, redirectToSignin, comments } = this.state;
+    const { post, redirectToPosts, redirectToSignin, comments, groupId } = this.state;
 
     if (redirectToPosts) {
-      return <Redirect to={`/group/${this.groupId}/posts`} />;
+      return <Redirect to={`/group/${groupId}/posts`} />;
     } else if (redirectToSignin) {
       return <Redirect to={`/signin`} />;
     }

@@ -38,6 +38,8 @@ const MainRouter = () => (
       <PrivateRoute exact path="/group/:groupId/post/create" component={NewPost} />
       <PrivateRoute exact path="/group/:groupId/post/edit/:postId" component={EditPost} />
       <Route exact path="/group/:groupId/posts" component={Posts} />
+      {/* SinglePost without a group Id */}
+      <Route exact path="/post/:postId" component={SinglePost} /> 
       <Route exact path="/group/:groupId/post/:postId" component={SinglePost} />
 
 

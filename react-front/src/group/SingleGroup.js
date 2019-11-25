@@ -135,6 +135,12 @@ class SingleGroup extends Component {
         <br />
         <br />
         <div className="float-right">
+        <Link
+            to={`/group/${groupId}/posts`}
+            className="btn btn-raised btn-primary btn-sm mr-2"
+          >
+            Discussion Forum
+          </Link>
           <Link
             to={`/group/${groupId}/post/create`}
             className="btn btn-raised btn-primary btn-sm mr-2"
