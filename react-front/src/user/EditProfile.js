@@ -156,7 +156,15 @@ class EditProfile extends Component {
   );
 
   render() {
-    const { id, name, email, password, redirectToProfile, error, about } = this.state;
+    const {
+      id,
+      name,
+      email,
+      password,
+      redirectToProfile,
+      error,
+      about
+    } = this.state;
 
     if (redirectToProfile) {
       return <Redirect to={`/user/${id}`} />;
@@ -171,12 +179,7 @@ class EditProfile extends Component {
     return (
       <div className="container">
         <h2 className="mt-5 mb-5">Edit Profile</h2>
-        <div
-          className="alert alert-danger"
-          sytle={{ display: error ? "" : "none" }}
-        >
-          {error}
-        </div>
+        {error && <div className="alert alert-danger">{error}</div>}
 
         <img
           style={{ height: "200px", width: "auto" }}
