@@ -99,17 +99,6 @@ exports.isCreator = (req, res, next) => {
 };
 
 exports.updateGroup = (req, res, next) => {
-  // let group = req.group;
-  // group = _.extend(group, req.body);
-  // console.log("req");
-  // group.save(err => {
-  //   if (err) {
-  //     return res.status(400).json({
-  //       error: err
-  //     });
-  //   }
-  //   res.json(group);
-  // });
   let form = new formidable.IncomingForm();
   form.keepExtensions = true;
   form.parse(req, (err, fields, files) => {
@@ -118,7 +107,6 @@ exports.updateGroup = (req, res, next) => {
         error: "Photo could not be uploaded."
       });
     }
-    // save user
     let group = req.group;
     // Override group with new fields
     group = _.extend(group, fields);
