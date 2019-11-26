@@ -61,12 +61,12 @@ class EditGroup extends Component {
 
       <div className="form-group">
         <label className="text-muted">About</label>
-        <input
+        <textarea
           onChange={this.handleChange("about")}
           type="text"
           className="form-control"
           value={about}
-        ></input>
+        ></textarea>
       </div>
 
       <div className="form-group">
@@ -88,7 +88,7 @@ class EditGroup extends Component {
         ></input>
       </div>
       <button onClick={this.clickSubmit} className="btn btn-raised btn-primary">
-        Update Group Information
+        Update Group
       </button>
       <Link to={`/group/${id}`} className="btn btn-raised btn-info ml-3">
         Cancel Editing
@@ -108,7 +108,7 @@ class EditGroup extends Component {
     //     : [];
     this.groupData.set(passInValue, value);
     // this.groupData.set("tags", tagsValue);
-    this.setState({ [passInValue]: value, fileSize: fileSize});
+    this.setState({ [passInValue]: value, fileSize: fileSize });
   };
 
   clickSubmit = event => {
@@ -117,7 +117,6 @@ class EditGroup extends Component {
     if (this.isValid()) {
       const groupId = this.state.id;
       const token = isAuthenticated().token;
-
       update(groupId, token, this.groupData).then(data => {
         if (data.error) {
           this.setState({ error: data.error });
@@ -162,17 +161,16 @@ class EditGroup extends Component {
     // const tagsString = tags.join(", ");
     // console.log(tagsString);
 
-    // const photoUrl = id
-    //   ? `${
-    //       process.env.REACT_APP_API_URL
-    //     }/group/photo/${id}?${new Date().getTime()}`
-    //   : DefaultPost;
+    const photoUrl = id
+      ? `${
+          process.env.REACT_APP_API_URL
+        }/group/photo/${id}?${new Date().getTime()}`
+      : DefaultPost;
 
     if (redirectToGroup) {
-        console.log(id);
-        return <Redirect to={`/group/${id}`} />;
-    //   let userId = isAuthenticated().user._id;
-    //   return <Redirect to={`/user/${userId}`} />;
+      return <Redirect to={`/group/${id}`} />;
+      //   let userId = isAuthenticated().user._id;
+      //   return <Redirect to={`/user/${userId}`} />;
     }
 
     return (
@@ -188,13 +186,13 @@ class EditGroup extends Component {
           </div>
         )}
 
-        {/* <img
+        <img
           style={{ height: "200px", width: "auto" }}
           className="img-thumbnail"
           src={photoUrl}
           onError={i => (i.target.src = `${DefaultPost}`)}
           alt={name}
-        /> */}
+        />
 
         {this.editGroupForm(id, name, about, tags)}
       </div>
