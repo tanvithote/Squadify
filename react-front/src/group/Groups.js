@@ -128,7 +128,15 @@ class Groups extends Component {
           </form>
         </div>
         <div className="container fluid">
+          <span>
           <h2 className="mt-5 mb-5">All Groups</h2>
+          <Link
+            to={`/group/create`}
+            className="btn btn-raised btn-primary btn-sm mr-2"
+          >
+            Create a new group
+          </Link>
+          </span>
           {this.renderGroups(groups)}
         </div>
       </>
