@@ -13,7 +13,6 @@ exports.groupById = (req, res, next, id) => {
           error: err
         });
       }
-      console.log(group);
       req.group = group;
       next();
     });

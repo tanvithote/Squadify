@@ -6,7 +6,7 @@ const { ObjectId } = mongoose.Schema;
 const groupSchema = new mongoose.Schema({
   name: {
     type: String,
-    trim: true,
+    // trim: true,
     required: true
   },
   createdBy: {
