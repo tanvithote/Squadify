@@ -161,17 +161,17 @@ export const notAttendEvent = (userId, token, eventId) => {
 //       .catch(err => console.log(err));
 //   };
 
-export const listByTag = tag => {
-  //   return fetch(`${process.env.REACT_APP_API_URL}/groups/search/${tag}`, {
-  return fetch(`${process.env.REACT_APP_API_URL}/groups/search/${tag}`, {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json"
-    }
-  })
-    .then(response => {
-      return response.json();
-    })
-    .catch(err => console.log(err));
-};
+// export const listByTag = tag => {
+//   //   return fetch(`${process.env.REACT_APP_API_URL}/groups/search/${tag}`, {
+//   return fetch(`${process.env.REACT_APP_API_URL}/groups/search/${tag}`, {
+//     method: "GET",
+//     headers: {
+//       Accept: "application/json",
+//       "Content-Type": "application/json"
+//     }
+//   })
+//     .then(response => {
+//       return response.json();
+//     })
+//     .catch(err => console.log(err));
+// };

@@ -135,7 +135,7 @@ class SingleGroup extends Component {
                      to={`/event/${event._id}`}
                      className="btn btn-raised btn-info btn-sm text-center"
                    >
-                     Read More About This Event
+                     Explore Event
                    </Link>
                 </div>
             </div>

@@ -210,9 +210,11 @@ exports.attendEvent = (req, res) => {
 };
 
 exports.notAttendEventGroup = (req, res) => {
+  console.log(req.event._id);
+  console.log(req.auth._id);
   let event_Data = null;
   Event.findByIdAndUpdate(
-    req.body.groupId,
+    req.event._id,
     { $pull: { attendes: req.body.userId } },
     { new: true } // required by Mongoose
   ).exec((err, result) => {
@@ -239,6 +241,11 @@ exports.notAttendEventGroup = (req, res) => {
             event : event_Data,
             user: result
         });
+        console.log(event_Data,result);
       }
     });
+};
+exports.photo = (req, res, next) => {
+  res.set("Content-Type", req.event.photo.contentType);
+  return res.send(req.event.photo.data);
 };

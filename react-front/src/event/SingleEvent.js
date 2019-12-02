@@ -4,6 +4,7 @@ import { singleEvent, remove, attendEvent, notAttendEvent } from "./apiEvent";
 import { Link, Redirect } from "react-router-dom";
 import DefaultPost from "../images/tea.jpg";
 import { isAuthenticated } from "../auth";
+import Menu from "../core/Menu";
 // import Comment from "./Comment";
 // import SwipeableViews from 'react-swipeable-views';
 // import { makeStyles, Theme, useTheme } from '@material-ui/core/styles';
@@ -44,13 +45,14 @@ class SingleEvent extends Component {
 
     let callApi = this.state.attend ? notAttendEvent : attendEvent; // call unlike/like method accordingly
     callApi(userId, token, eventId).then(data => {
+      console.log(token);
       if (data.error) {
-        console.log(data.error);
+        console.log("error in api :", data.error);
       } else {
         this.setState({
         attend: !this.state.attend,
-        attendes: data.attendes,
-        tags: data.tags
+        attendes: data.event.attendes,
+        tags: data.event.tags
         });
       }
     });
@@ -60,6 +62,7 @@ class SingleEvent extends Component {
   checkJoined = attendes => {
     const userId = isAuthenticated() && isAuthenticated().user._id;
     let match = attendes.indexOf(userId) !== -1; // if this user exists in the members array, then its index is not -1, return true; else return false
+    console.log(match);
     return match;
   };
 
@@ -94,9 +97,10 @@ class SingleEvent extends Component {
           event: data,
           attendes: data.attendes,
           tags: data.tags,
-          joined: this.checkJoined(data.attendes)
+          attend: this.checkJoined(data.attendes)
           //   comments: data.comments
         });
+        console.log(this.state.tags);
       }
     });
   };
@@ -186,7 +190,7 @@ class SingleEvent extends Component {
               isAuthenticated().user._id === creatorId && (
                 <>
                   <Link
-                    to={`/group/edit/${event._id}`}
+                    to={`/event/edit/${eventId}`}
                     className="btn btn-raised btn-info btn-sm mr-3"
                   >
                     Edit Event
@@ -216,9 +220,7 @@ class SingleEvent extends Component {
       event,
       redirectToGroup,
       redirectToSignin,
-      attendes,
-      tags,
-      group
+      tags
     } = this.state;
 
     if (redirectToGroup) {
@@ -230,6 +232,7 @@ class SingleEvent extends Component {
     }
 
     return (
+      <div><Menu/>
       <div className="container">
         <h2 className="display-2 mt-5 ml-3">{event.name}</h2>
         <h5 className="ml-3 mt-3">{event.location}</h5>
@@ -254,7 +257,7 @@ class SingleEvent extends Component {
           updateComments={this.updateComments}
         /> */}
       </div>
-      
+      </div>
     );
   }
 }
