@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { isAuthenticated } from "../auth";
-import { create, joinGroup } from "./apiEvent";
+import { create, attendEvent } from "./apiEvent";
+import  {singleGroup} from "../group/apiGroup";
 import { Redirect } from "react-router-dom";
 import 'date-fns';
 import DefaultPost from "../images/tea.jpg";
@@ -19,7 +20,7 @@ class NewEvent extends Component {
       photo: "",
       error: "",
       user: {},
-      group:"",
+      group:{},
       tags: [],
       fileSize: 0,
       eventdate: new Date(),
@@ -32,6 +33,17 @@ class NewEvent extends Component {
   componentDidMount() {
     this.eventData = new FormData();
     this.setState({ user: isAuthenticated().user});
+    this.groupId = this.props.match.params.groupId;
+    this.setState({ group: this.groupId});
+    singleGroup(this.groupId).then(data => {
+      if (data.error) {
+        console.log(data.error);
+      } else {
+        this.setState({
+          group: data
+        });
+      }
+    });
   }
 
   isValid = () => {
@@ -80,14 +92,17 @@ class NewEvent extends Component {
 
   handleDateChange=date=>{
     this.setState({eventdate:date});
+    this.eventData.set("eventdate",date);
   }
 
   handleStartTimeChange=time=>{
     this.setState({starttime:time});
+    this.eventData.set("starttime",time);
   }
 
   handleEndTimeChange=time=>{
     this.setState({endtime:time});
+    this.eventData.set("endtime",time);
   }
 
   clickSubmit = event => {
@@ -95,9 +110,10 @@ class NewEvent extends Component {
 
     if (this.isValid()) {
       const userId = isAuthenticated().user._id;
+      const groupId = this.props.match.params.groupId;
       const token = isAuthenticated().token;
 
-      create(userId, token, this.eventData).then(data => {
+      create(userId, groupId, token, this.eventData).then(data => {
         if (data.error) {
           this.setState({ error: data.error });
         } else {
@@ -109,10 +125,9 @@ class NewEvent extends Component {
             photo: "",
             error: "",
             tags: [],
-            group:"",
             eventdate: new Date(),
             starttime: new Date(),
-            endtime:new Date(),
+            endtime: new Date(),
             redirectToGroups: true
           });
           //   updateUser(data, () => {
@@ -238,18 +253,18 @@ class NewEvent extends Component {
 
     if (redirectToGroups) {
       // return <Redirect to={`/user/${user._id}`} />;
-      return <Redirect to={`/groups`} />;
+      return <Redirect to={`/group/${this.state.group._id}`} />;
     }
 
     // const photoUrl = id
-    //   ? `${
+    //   ? `${x
     //       process.env.REACT_APP_API_URL
     //     }/user/photo/${id}?${new Date().getTime()}`
     //   : DefaultProfile;
 
     return (
       <div className="container">
-        <h2 className="mt-5 mb-5">Create a new Event for Group </h2>
+        <h2 className="mt-5 mb-5">Create a new Event for Group {this.state.group.name}</h2>
         {error && <div className="alert alert-danger">{error}</div>}
 
         {this.newEventForm(name, location, tags, description,starttime,endtime,eventdate)}

@@ -23,9 +23,13 @@ export const list = () => {
     .catch(err => console.log(err));
 };
 
-export const singleEvent = eventId => {
+export const singleEvent = (eventId,token) => {
   return fetch(`${process.env.REACT_APP_API_URL}/event/${eventId}`, {
-    method: "GET"
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      Authorization: `Bearer ${token}`
+    },
   })
     .then(response => {
       return response.json();
@@ -80,7 +84,7 @@ export const update = (eventId, token,event) => {
 };
 
 export const attendEvent = (userId, token, eventId) => {
-  return fetch(`${process.env.REACT_APP_API_URL}/evvent/attend/${eventId}`, {
+  return fetch(`${process.env.REACT_APP_API_URL}/event/attend/${eventId}`, {
     method: "PUT",
     headers: {
       Accept: "application/json",
@@ -95,15 +99,15 @@ export const attendEvent = (userId, token, eventId) => {
     .catch(err => console.log(err));
 };
 
-export const unjoinGroup = (userId, token, groupId) => {
-  return fetch(`${process.env.REACT_APP_API_URL}/group/unjoin/${groupId}`, {
+export const notAttendEvent = (userId, token, eventId) => {
+  return fetch(`${process.env.REACT_APP_API_URL}/event/notAttend/${eventId}`, {
     method: "PUT",
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`
     },
-    body: JSON.stringify({ userId: userId, groupId: groupId })
+    body: JSON.stringify({ userId: userId, event: eventId })
   })
     .then(response => {
       return response.json();
@@ -157,17 +161,17 @@ export const unjoinGroup = (userId, token, groupId) => {
 //       .catch(err => console.log(err));
 //   };
 
-export const listByTag = tag => {
-  //   return fetch(`${process.env.REACT_APP_API_URL}/groups/search/${tag}`, {
-  return fetch(`${process.env.REACT_APP_API_URL}/groups/search/${tag}`, {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json"
-    }
-  })
-    .then(response => {
-      return response.json();
-    })
-    .catch(err => console.log(err));
-};
+// export const listByTag = tag => {
+//   //   return fetch(`${process.env.REACT_APP_API_URL}/groups/search/${tag}`, {
+//   return fetch(`${process.env.REACT_APP_API_URL}/groups/search/${tag}`, {
+//     method: "GET",
+//     headers: {
+//       Accept: "application/json",
+//       "Content-Type": "application/json"
+//     }
+//   })
+//     .then(response => {
+//       return response.json();
+//     })
+//     .catch(err => console.log(err));
+// };
