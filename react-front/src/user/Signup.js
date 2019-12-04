@@ -11,9 +11,13 @@ class Signup extends Component {
       email: "",
       password: "",
       error: "",
+      tags: [],
+      choosetags: [],
       open: false
     };
   }
+
+
 
   handleChange = passInValue => event => {
     this.setState({ error: "" });
@@ -26,7 +30,8 @@ class Signup extends Component {
     const user = {
       name: name,
       email: email,
-      password: password
+      password: password,
+      tags: this.state.choosetags
     };
     // console.log(user);
     signup(user).then(data => {
@@ -46,11 +51,36 @@ class Signup extends Component {
 
   componentDidMount() {
     fetch('http://localhost:8080/getTags')
-      .then(res => {
-          console.log(res);
-          return res.json()
-       });
+      .then(res =>  res.json())
+      .then((jsonData) =>{
+        console.log(jsonData);
+        this.setState({tags: jsonData});
+        console.log(this.state);
+      }
+      )
    }
+
+   putTags = (event) => {
+    this.state.choosetags.push(event.currentTarget.textContent)
+    console.log(this.state.choosetags);
+  };
+
+  addTags = () => {
+    let tagList = []
+    console.log("Pushing Tags")
+    const styles =  {
+      backgroundColor: 'blue',
+      margin: '10px',
+      color: 'white'
+    }
+
+    for(let i = 0; i<this.state.tags.length; i++)
+      tagList.push(<Button  style={styles} onClick = {event => this.putTags(event)} color="blue"> {this.state.tags[i]["tagName"]} </Button>)
+      console.log("Tags Pushed")
+    return tagList
+  }
+
+
 
   signupForm = (name, email, password) => (
     <form>
@@ -84,7 +114,7 @@ class Signup extends Component {
       <div class = "form-group">
       <label className="text-muted">Choose Tags</label>
       <br/><br/>
-      <Button variant="outline-primary" color="blue"> test </Button>
+      {this.addTags()}
       </div>
       <button onClick={this.clickSubmit} className="btn btn-raised btn-primary">
         Sign Up
@@ -93,7 +123,6 @@ class Signup extends Component {
   );
 
   render() {
-    console.log('I was triggered during render')
     const { name, email, password, error, open } = this.state;
     return (
       <div className="container">
