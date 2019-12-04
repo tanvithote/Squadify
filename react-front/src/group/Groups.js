@@ -45,32 +45,33 @@ class Groups extends Component {
             : " Unknown";
 
           return (
-            <div className='col-md-4 col-xs-6 mb-2' key={i}>
-              <Link to ="/events/details/1234">
-                <div class='card bwm-card'>
+            <div className="col-md-4 col-xs-6 mb-2" key={i}>
+              <Link to="/events/details/1234">
+                <div class="card bwm-card">
                   {/* <img class='card-img-top' src='http://via.placeholder.com/350x250' alt=''></img> */}
                   <img
-                   src={`${process.env.REACT_APP_API_URL}/group/photo/${group._id}`}
-                   alt={group.name}
-                   onError={i => (i.target.src = `${DefaultPost}`)}
-                   className="card-img-top"
-                   style={{ height: "200px", width: "300px" }}
-                 />
+                    src={`${process.env.REACT_APP_API_URL}/group/photo/${group._id}`}
+                    alt={group.name}
+                    onError={i => (i.target.src = `${DefaultPost}`)}
+                    className="card-img-top"
+                    style={{ height: "200px", width: "300px" }}
+                  />
 
-                  <div class='card-block'>
-                    <h6 class='card-subtitle'>{group.name}</h6>
-                    <h4 class='card-title'>{group.about.substring(0, 100)}</h4>
-                    <p class='card-text'>Created by <Link to={`${creatorId}`}>{creatorName} </Link>
-                     on {new Date(group.created).toDateString()}</p>
+                  <div class="card-block">
+                    <h6 class="card-subtitle">{group.name}</h6>
+                    <h4 class="card-title">{group.about.substring(0, 100)}</h4>
+                    <p class="card-text">
+                      Created by <Link to={`${creatorId}`}>{creatorName} </Link>
+                      on {new Date(group.created).toDateString()}
+                    </p>
                   </div>
                   <Link
-                     to={`/group/${group._id}`}
-                     className="btn btn-raised btn-info btn-sm text-center"
-                   >
-                     Read More About This Group
-                   </Link>
+                    to={`/group/${group._id}`}
+                    className="btn btn-raised btn-info btn-sm text-center"
+                  >
+                    Read More About This Group
+                  </Link>
                 </div>
-                
               </Link>
             </div>
             // <div className="card col-md-12 mb-2" key={i}>
@@ -110,9 +111,31 @@ class Groups extends Component {
     return (
       <>
         <div>
+<<<<<<< HEAD
+          <Menu />
+          <div className="container mt-5">
+            <form>
+              <input
+                type="text"
+                placeholder="Search for groups..."
+                name="search"
+                onChange={this.queryChange}
+                onSubmit={this.handleSearch}
+              />
+              {/* <button onClick={handleSearch}>
+              <i class="fa fa-search"></i>
+            </button> */}
+              <Link to={`/groups/search/${query}`}>
+                <i className="fa fa-search ml-1"></i>
+              </Link>
+            </form>
+          </div>
+        </div>
+=======
           <Menu/>
+          <div className="container mt-5">
           <form>
-            {/* <input
+             <input
               type="text"
               placeholder="Search.."
               name="search"
@@ -122,14 +145,25 @@ class Groups extends Component {
             {/* <button onClick={handleSearch}>
               {/* <i class="fa fa-search"></i> */}
             {/* </button> */}
-            {/* <Link to={`/groups/search/${query}`}>
+            <Link to={`/groups/search/${query}`}>
               <i class="fa fa-search"></i>
-            </Link>  */}
+            </Link> 
           </form>
-        </div>
+          </div>
+        
+>>>>>>> Event + Search bar
         <div className="container fluid">
-          <h2 className="mt-5 mb-5">All Groups</h2>
+          <span>
+            <h2 className="mt-5 mb-5">All Groups</h2>
+            <Link
+              to={`/group/create`}
+              className="btn btn-raised btn-primary btn-sm mr-2"
+            >
+              Create a new group
+            </Link>
+          </span>
           {this.renderGroups(groups)}
+        </div>
         </div>
       </>
     );

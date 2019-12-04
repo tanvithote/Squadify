@@ -28,8 +28,8 @@ class DeleteEvent extends Component {
   };
 
   render() {
-    if (this.state.redirectToPosts) {
-      return <Redirect to="/group" />;
+    if (this.state.redirectToGroup) {
+      return <Redirect to="/group/${groupId}" />;
     } 
     return (
       <button

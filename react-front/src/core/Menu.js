@@ -84,28 +84,24 @@
 //           </li>
 //         </>
 //       )}
-     
+
 //     </ul>
 //   </div>
 // );
 
 // export default withRouter(Menu);
 
-
-
-
-
 import React from "react";
 import { Link, withRouter } from "react-router-dom";
 import { signout, isAuthenticated } from "../auth";
-import Navbar from 'react-bootstrap/Navbar';
-import NavDropdown from 'react-bootstrap/NavDropdown';
-import Nav from 'react-bootstrap/Nav';
-import Form from 'react-bootstrap/Form';
-import FormControl from 'react-bootstrap/FormControl';
-import Button from 'react-bootstrap/Button';
+import Navbar from "react-bootstrap/Navbar";
+import NavDropdown from "react-bootstrap/NavDropdown";
+import Nav from "react-bootstrap/Nav";
+import Form from "react-bootstrap/Form";
+import FormControl from "react-bootstrap/FormControl";
+import Button from "react-bootstrap/Button";
 import Profile from "../user/Profile";
-import image from '../images/avatar.png';
+import image from "../images/avatar.png";
 
 const isActive = (history, path) => {
   if (history.location.pathname === path) {
@@ -129,8 +125,8 @@ const Menu = ({ history }) => (
       <Nav.Link href="/group/create">Start a new group</Nav.Link>
       <Nav.Link href="/groups">Explore</Nav.Link>
       <Form className='ml-3' inline>
-      <FormControl type="text" placeholder="Search" className="justify-content-left" />
-      <Button variant="outline-info">Search</Button>
+      {/* <FormControl type="text" placeholder="Search" className="justify-content-left" />
+      <Button variant="outline-info">Search</Button> */}
       
     </Form>
       
@@ -147,29 +143,24 @@ const Menu = ({ history }) => (
     
         
 
-        
-        
-        
-    
         <li className="nav-item">
-             <span
-               className="nav-link"
-               style={
-                 (isActive(history, "/signout"),
-                 { cursor: "pointer", color: "#fff" })
-               }
-               onClick={() => signout(() => history.push("/"))}
-             >
-              <NavDropdown.Item>Log Out</NavDropdown.Item>
-             </span>
+          <span
+            className="nav-link"
+            style={
+              (isActive(history, "/signout"),
+              { cursor: "pointer", color: "#fff" })
+            }
+            onClick={() => signout(() => history.push("/"))}
+          >
+            <NavDropdown.Item>Log Out</NavDropdown.Item>
+          </span>
         </li>
         {/* <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
         <NavDropdown.Divider />
         <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item> */}
       </NavDropdown>
-  </Navbar.Collapse>
-</Navbar>
+    </Navbar.Collapse>
+  </Navbar>
 );
 
 export default withRouter(Menu);
-

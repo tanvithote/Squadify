@@ -4,6 +4,7 @@ import { Redirect, Link } from "react-router-dom";
 import DefaultPost from "../images/tea.jpg";
 import { listByTag } from "../group/apiGroup";
 import ProfileTabs from "../user/ProfileTabs";
+import Menu from "../core/Menu";
 
 class SearchGroups extends Component {
   constructor() {
@@ -13,15 +14,26 @@ class SearchGroups extends Component {
       redirectToSignin: false,
       error: "",
       groups: [],
+      query: "",
       tag: ""
     };
   }
+
+  queryChange = evt => {
+    this.setState({ query: evt.target.value });
+    // console.log(this.state.query);
+  };
+
+  handleSearch = () => {
+    // this.context.router.push(`/groups/search/${this.state.query}`);
+    this.props.history.push(`/groups/search/${this.state.query}`);
+    window.location.reload();
+  };
 
   componentDidMount() {
     // const userId = this.props.match.params.userId;
     const tag = this.props.match.params.tag.toString();
     listByTag(tag).then(data => {
-      console.log(data);
       if (data.error) {
         this.setState({ redirectToSignin: true });
       } else {
@@ -81,17 +93,36 @@ class SearchGroups extends Component {
   };
 
   render() {
-    const { redirectToSignin, groups, tag } = this.state;
+    const { redirectToSignin, groups, tag, query } = this.state;
 
     if (redirectToSignin) {
       return <Redirect to="/signin" />;
     }
 
     return (
-      <div className="container fluid">
-        <h2 className="mt-5 mb-5">Groups search result for tag "{tag}"</h2>
-        {this.renderGroups(groups)}
-      </div>
+      <>
+        <div>
+          <Menu />
+          <div className="container mt-5">
+            <form> 
+              <input
+                type="text"
+                placeholder="Search for groups..."
+                name="search"
+                onChange={this.queryChange}
+                onSubmit={this.handleSearch}
+              />
+              <Link to={`/groups/search/${query}`} onClick={this.handleSearch}>
+                <i className="fa fa-search ml-1"></i>
+              </Link>
+            </form>
+          </div>
+        </div>
+        <div className="container fluid">
+          <h2 className="mt-5 mb-5">Groups search result for tag "{tag}"</h2>
+          {this.renderGroups(groups)}
+        </div>
+      </>
     );
   }
 }

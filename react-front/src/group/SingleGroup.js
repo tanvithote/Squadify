@@ -1,10 +1,18 @@
 import React, { Component } from "react";
 import { singleGroup, remove, joinGroup, unjoinGroup } from "./apiGroup";
+import{listEventByGroup} from "../event/apiEvent";
 import { Link, Redirect } from "react-router-dom";
 import DefaultPost from "../images/tea.jpg";
 import { isAuthenticated } from "../auth";
 // import DeletePost from "./DeletePost";
 // import Comment from "./Comment";
+// import SwipeableViews from 'react-swipeable-views';
+// import { makeStyles, Theme, useTheme } from '@material-ui/core/styles';
+// import AppBar from '@material-ui/core/AppBar';
+// import Tabs from '@material-ui/core/Tabs';
+// import Tab from '@material-ui/core/Tab';
+// import Typography from '@material-ui/core/Typography';
+// import Box from '@material-ui/core/Box';
 
 class SingleGroup extends Component {
   state = {
@@ -14,7 +22,8 @@ class SingleGroup extends Component {
     joined: false,
     members: [],
     tags: [],
-    events: []
+    events: [],
+    group_events:[]
   };
 
   updateMembers = members => {
@@ -78,6 +87,7 @@ class SingleGroup extends Component {
 
   componentDidMount = () => {
     const groupId = this.props.match.params.groupId;
+    const token = isAuthenticated().token;
     singleGroup(groupId).then(data => {
       if (data.error) {
         console.log(data.error);
@@ -91,8 +101,50 @@ class SingleGroup extends Component {
         });
       }
     });
+    listEventByGroup(groupId,token).then(data => {
+      if (data.error) {
+        console.log(data.error);
+      } else {
+        this.setState({
+          group_events: data,
+          
+        });
+      }
+    });
+
   };
 
+  renderEvents = group_events =>{
+    return(
+      <div>
+        <h4 className="display-4 mt-3 ml-3"> <small class="text-muted">Events:</small></h4>
+    {group_events.map((event,i)=>{
+      return(
+        <div className='col-md-4 col-xs-6 mb-2' key={i}>
+                <div class='card bwm-card'>
+                
+                  <div class='card-block'>
+                    <h4 class='card-title'>{event.name}</h4>
+                    <h6 class='card-subtitle mb-4 text-muted'>{event.description.substring(0, 100)}</h6>
+                    <p class='card-text'>Event <Link to={`${event.creatorId}`}>{event.createdBy._id} </Link>
+                     on {new Date(event.eventdate).toDateString()} </p>
+                     <p class='card-text'>Timings  {new Date(event.starttime).getHours()} : {new Date(event.starttime).getMinutes()}  to 
+                         {new Date(event.endtime).getHours()} : {new Date(event.endtime).getMinutes()} </p>
+                  </div>
+                  <Link
+                     to={`/event/${event._id}`}
+                     className="btn btn-raised btn-info btn-sm text-center"
+                   >
+                     Explore Event
+                   </Link>
+                </div>
+            </div>
+      );
+    })}
+    </div>
+    );
+ };
+ 
   renderGroup = group => {
     const creatorName = group.createdBy ? group.createdBy.name : " Unknown";
     const creatorId = group.createdBy ? group.createdBy._id : " Unknown";
@@ -135,6 +187,12 @@ class SingleGroup extends Component {
         <br />
         <br />
         <div className="float-right">
+        <Link
+            to={`/group/${groupId}/posts`}
+            className="btn btn-raised btn-primary btn-sm mr-2"
+          >
+            Discussion Forum
+          </Link>
           <Link
             to={`/group/${groupId}/post/create`}
             className="btn btn-raised btn-primary btn-sm mr-2"
@@ -143,7 +201,7 @@ class SingleGroup extends Component {
           </Link>
 
           <Link
-            to={`/event/create`}
+            to={`/group/${groupId}/event/create`}
             className="btn btn-raised btn-primary btn-sm"
           >
             Create Event
@@ -181,8 +239,10 @@ class SingleGroup extends Component {
           </div>
         </div>
       </div>
+
     );
   };
+
 
   render() {
     const {
@@ -190,6 +250,7 @@ class SingleGroup extends Component {
       redirectToGroups,
       redirectToSignin,
       members,
+      group_events,
       tags
     } = this.state;
 
@@ -219,13 +280,14 @@ class SingleGroup extends Component {
         </div>
 
         {this.renderGroup(group)}
-
+        {this.renderEvents(group_events)}
         {/* <Comment
           postId={post._id}
           comments={comments.reverse()}
           updateComments={this.updateComments}
         /> */}
       </div>
+      
     );
   }
 }
