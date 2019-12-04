@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { signup } from "../auth/index";
 import { Link } from "react-router-dom";
+import { Button } from "react-bootstrap";
 
 class Signup extends Component {
   constructor() {
@@ -43,6 +44,14 @@ class Signup extends Component {
     });
   };
 
+  componentDidMount() {
+    fetch('http://localhost:8080/getTags')
+      .then(res => {
+          console.log(res);
+          return res.json()
+       });
+   }
+
   signupForm = (name, email, password) => (
     <form>
       <div class="form-group">
@@ -72,6 +81,11 @@ class Signup extends Component {
           value={password}
         ></input>
       </div>
+      <div class = "form-group">
+      <label className="text-muted">Choose Tags</label>
+      <br/><br/>
+      <Button variant="outline-primary" color="blue"> test </Button>
+      </div>
       <button onClick={this.clickSubmit} className="btn btn-raised btn-primary">
         Sign Up
       </button>
@@ -79,6 +93,7 @@ class Signup extends Component {
   );
 
   render() {
+    console.log('I was triggered during render')
     const { name, email, password, error, open } = this.state;
     return (
       <div className="container">

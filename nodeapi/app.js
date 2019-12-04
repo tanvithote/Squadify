@@ -28,7 +28,7 @@ const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/user');
 const groupRoutes = require('./routes/group');
 const eventRoutes = require('./routes/event')
-
+const tagRoutes = require('./routes/tags')
 // apiDocs
 app.get('/', (req, res) => {
   fs.readFile('docs/apiDocs.json', (err, data) => {
@@ -59,6 +59,7 @@ app.use('/', authRoutes);
 app.use('/', userRoutes);
 app.use('/', groupRoutes);
 app.use('/',eventRoutes);
+app.use('/',tagRoutes);
 app.use(function (err, req, res, next) {
   if (err.name === 'UnauthorizedError') {
     res.status(401).json({ error: 'Unauthorized' });
