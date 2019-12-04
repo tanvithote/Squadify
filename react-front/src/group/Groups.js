@@ -111,27 +111,6 @@ class Groups extends Component {
     return (
       <>
         <div>
-<<<<<<< HEAD
-          <Menu />
-          <div className="container mt-5">
-            <form>
-              <input
-                type="text"
-                placeholder="Search for groups..."
-                name="search"
-                onChange={this.queryChange}
-                onSubmit={this.handleSearch}
-              />
-              {/* <button onClick={handleSearch}>
-              <i class="fa fa-search"></i>
-            </button> */}
-              <Link to={`/groups/search/${query}`}>
-                <i className="fa fa-search ml-1"></i>
-              </Link>
-            </form>
-          </div>
-        </div>
-=======
           <Menu/>
           <div className="container mt-5">
           <form>
@@ -151,7 +130,6 @@ class Groups extends Component {
           </form>
           </div>
         
->>>>>>> Event + Search bar
         <div className="container fluid">
           <span>
             <h2 className="mt-5 mb-5">All Groups</h2>
