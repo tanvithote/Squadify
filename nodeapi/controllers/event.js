@@ -88,6 +88,22 @@ exports.createEvent = (req, res) => {
       event.photo.data = fs.readFileSync(files.photo.path);
       event.photo.contentType = files.photo.type;
     }
+
+    // Push this event to corresponding group
+    Group.findByIdAndUpdate(
+      req.group._id,
+      { $push: { events: event._id } },
+      { new: true }
+    ).exec((err, result) => {
+      if (err) {
+        return res.status(400).json({
+          error: err
+        });
+      } else {
+        console.log(`Event ${event._id} pushed to its group`);
+      }
+    });
+
     event.save((err, result) => {
       if (err) {
         return res.status(400).json({
@@ -97,12 +113,14 @@ exports.createEvent = (req, res) => {
       res.json(result);
     });
   });
-  const event = new Event(req.body);
-  event.save().then(result => {
-    res.status(200).json({
-      event: result
-    });
-  });
+
+  // The following part should be deleted
+  // const event = new Event(req.body);
+  // event.save().then(result => {
+  //   res.status(200).json({
+  //     event: result
+  //   });
+  // });
 };
 
 exports.eventsByGroup = (req, res) => {
