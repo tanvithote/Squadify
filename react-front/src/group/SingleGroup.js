@@ -1,9 +1,12 @@
 import React, { Component } from "react";
 import { singleGroup, remove, joinGroup, unjoinGroup } from "./apiGroup";
-import{listEventByGroup} from "../event/apiEvent";
+import { listEventByGroup } from "../event/apiEvent";
 import { Link, Redirect } from "react-router-dom";
 import DefaultPost from "../images/tea.jpg";
 import { isAuthenticated } from "../auth";
+import { Calendar, momentLocalizer } from "react-big-calendar";
+import moment from "moment";
+import "react-big-calendar/lib/css/react-big-calendar.css";
 // import DeletePost from "./DeletePost";
 // import Comment from "./Comment";
 // import SwipeableViews from 'react-swipeable-views';
@@ -22,8 +25,10 @@ class SingleGroup extends Component {
     joined: false,
     members: [],
     tags: [],
-    events: [],
-    group_events:[]
+    // events: [],
+    group_events: [],
+    redirectToEvent: false,
+    eventId: ""
   };
 
   updateMembers = members => {
@@ -101,50 +106,67 @@ class SingleGroup extends Component {
         });
       }
     });
-    listEventByGroup(groupId,token).then(data => {
+    listEventByGroup(groupId, token).then(data => {
       if (data.error) {
         console.log(data.error);
       } else {
         this.setState({
-          group_events: data,
-          
+          group_events: data
         });
       }
     });
-
   };
 
-  renderEvents = group_events =>{
-    return(
+  renderEvents = group_events => {
+    return (
       <div>
-        <h4 className="display-4 mt-3 ml-3"> <small class="text-muted">Events:</small></h4>
-    {group_events.map((event,i)=>{
-      return(
-        <div className='col-md-4 col-xs-6 mb-2' key={i}>
-                <div class='card bwm-card'>
-                
-                  <div class='card-block'>
-                    <h4 class='card-title'>{event.name}</h4>
-                    <h6 class='card-subtitle mb-4 text-muted'>{event.description.substring(0, 100)}</h6>
-                    <p class='card-text'>Event <Link to={`${event.creatorId}`}>{event.createdBy._id} </Link>
-                     on {new Date(event.eventdate).toDateString()} </p>
-                     <p class='card-text'>Timings  {new Date(event.starttime).getHours()} : {new Date(event.starttime).getMinutes()}  to 
-                         {new Date(event.endtime).getHours()} : {new Date(event.endtime).getMinutes()} </p>
-                  </div>
-                  <Link
-                     to={`/event/${event._id}`}
-                     className="btn btn-raised btn-info btn-sm text-center"
-                   >
-                     Explore Event
-                   </Link>
+        <h4 className="display-4 mt-3 ml-3">
+          {" "}
+          <small class="text-muted">Events:</small>
+        </h4>
+        {group_events.map((event, i) => {
+          return (
+            <div className="col-md-4 col-xs-6 mb-2" key={i}>
+              <div class="card bwm-card">
+                <div class="card-block">
+                  <h4 class="card-title">{event.name}</h4>
+                  <h6 class="card-subtitle mb-4 text-muted">
+                    {event.description.substring(0, 100)}
+                  </h6>
+                  <p class="card-text">
+                    Date:{" "}
+                    <Link to={`${event.creatorId}`}>
+                      {event.createdBy._id}{" "}
+                    </Link>
+                    {new Date(event.eventdate).toDateString()}{" "}
+                  </p>
+                  <p class="card-text">
+                    Time:{" "}
+                    {new Date(event.starttime).toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit"
+                    })}{" "}
+                    to{" "}
+                    {new Date(event.endtime).toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit"
+                    })}
+                  </p>
                 </div>
+                <Link
+                  to={`/event/${event._id}`}
+                  className="btn btn-raised btn-info btn-sm text-center"
+                >
+                  Explore Event
+                </Link>
+              </div>
             </div>
-      );
-    })}
-    </div>
+          );
+        })}
+      </div>
     );
- };
- 
+  };
+
   renderGroup = group => {
     const creatorName = group.createdBy ? group.createdBy.name : " Unknown";
     const creatorId = group.createdBy ? group.createdBy._id : " Unknown";
@@ -187,7 +209,7 @@ class SingleGroup extends Component {
         <br />
         <br />
         <div className="float-right">
-        <Link
+          <Link
             to={`/group/${groupId}/posts`}
             className="btn btn-raised btn-primary btn-sm mr-2"
           >
@@ -211,7 +233,8 @@ class SingleGroup extends Component {
         <br />
         <div class="card-footer text-muted">
           <p>
-            Group Administrator <Link to={`/user/${creatorId}`}>{creatorName} </Link>
+            Group Administrator{" "}
+            <Link to={`/user/${creatorId}`}>{creatorName} </Link>
             {/* on {new Date(group.created).toDateString()} */}
           </p>
           <div className="d-inline-block">
@@ -239,10 +262,52 @@ class SingleGroup extends Component {
           </div>
         </div>
       </div>
-
     );
   };
 
+  handleEventClicked = event => {
+    this.setState({ eventId: event.id, redirectToEvent: true });
+  };
+
+  renderCalender = group_events => {
+    moment.locale("en-US");
+    const localizer = momentLocalizer(moment);
+    let eventsList = []; // Will push events to this list later
+
+    let i = 0;
+    for (i = 0; i < group_events.length; i++) {
+      if (group_events[i] !== undefined) {
+        // console.log(group_events[i].eventdate);
+        let temp = {
+          start: group_events[i].starttime,
+          end: group_events[i].endtime,
+          title: group_events[i].name,
+          id: group_events[i]._id
+        };
+        eventsList.push(temp);
+      }
+    }
+
+    const MyCalendar = props => (
+      <Calendar
+        localizer={localizer}
+        events={eventsList}
+        startAccessor="start"
+        endAccessor="end"
+        style={{ height: "500px", width: "100%" }}
+        step={60}
+        showMultiDayTimes
+        defaultDate={new Date()}
+        onSelectEvent={event => this.handleEventClicked(event)}
+      />
+    );
+
+    return (
+      <div>
+        <MyCalendar />
+      </div>
+    );
+  };
 
   render() {
     const {
@@ -251,7 +316,9 @@ class SingleGroup extends Component {
       redirectToSignin,
       members,
       group_events,
-      tags
+      tags,
+      redirectToEvent,
+      eventId
     } = this.state;
 
     if (redirectToGroups) {
@@ -260,34 +327,48 @@ class SingleGroup extends Component {
       //   return <Redirect to={`/user/${userId}`} />;
     } else if (redirectToSignin) {
       return <Redirect to={`/signin`} />;
+    } else if (redirectToEvent) {
+      return <Redirect to={`/event/${eventId}`} />;
     }
 
     return (
-      <div className="container">
-        <h2 className="display-2 mt-5 ml-3">{group.name}</h2>
-        <h5 className="ml-3 mt-3">{group.location}</h5>
-        <div className="ml-3 mt-3">
-          {tags.map((tag, i) => {
-            return (
-              <span
-                key={i}
-                className="badge badge-pill badge-success mr-2 display-3"
-              >
-                {tag}
-              </span>
-            );
-          })}
-        </div>
+      <>
+        <div className="container">
+          <h2 className="display-2 mt-5 ml-3">{group.name}</h2>
+          <h5 className="ml-3 mt-3">{group.location}</h5>
+          <div className="ml-3 mt-3">
+            {tags.map((tag, i) => {
+              return (
+                <span
+                  key={i}
+                  className="badge badge-pill badge-success mr-2 display-3"
+                >
+                  {tag}
+                </span>
+              );
+            })}
+          </div>
 
-        {this.renderGroup(group)}
-        {this.renderEvents(group_events)}
-        {/* <Comment
-          postId={post._id}
-          comments={comments.reverse()}
-          updateComments={this.updateComments}
-        /> */}
-      </div>
-      
+          {this.renderGroup(group)}
+          {this.renderEvents(group_events)}
+
+          <button
+            className="btn btn-outline-info"
+            type="button"
+            data-toggle="collapse"
+            data-target="#collapseCalendar"
+            aria-expanded="false"
+            aria-controls="collapseCalendar"
+          >
+            View Group Calendar
+          </button>
+          <div class="collapse" id="collapseCalendar">
+            <div class="card card-body">
+              {this.renderCalender(group_events)}
+            </div>
+          </div>
+        </div>
+      </>
     );
   }
 }
