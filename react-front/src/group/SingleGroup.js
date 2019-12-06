@@ -26,7 +26,9 @@ class SingleGroup extends Component {
     members: [],
     tags: [],
     // events: [],
-    group_events: []
+    group_events: [],
+    redirectToEvent: false,
+    eventId: ""
   };
 
   updateMembers = members => {
@@ -132,17 +134,23 @@ class SingleGroup extends Component {
                     {event.description.substring(0, 100)}
                   </h6>
                   <p class="card-text">
-                    Event{" "}
+                    Date:{" "}
                     <Link to={`${event.creatorId}`}>
                       {event.createdBy._id}{" "}
                     </Link>
-                    on {new Date(event.eventdate).toDateString()}{" "}
+                    {new Date(event.eventdate).toDateString()}{" "}
                   </p>
                   <p class="card-text">
-                    Timings {new Date(event.starttime).getHours()} :{" "}
-                    {new Date(event.starttime).getMinutes()} to
-                    {new Date(event.endtime).getHours()} :{" "}
-                    {new Date(event.endtime).getMinutes()}{" "}
+                    Time:{" "}
+                    {new Date(event.starttime).toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit"
+                    })}{" "}
+                    to{" "}
+                    {new Date(event.endtime).toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit"
+                    })}
                   </p>
                 </div>
                 <Link
@@ -257,20 +265,24 @@ class SingleGroup extends Component {
     );
   };
 
+  handleEventClicked = event => {
+    this.setState({ eventId: event.id, redirectToEvent: true });
+  };
+
   renderCalender = group_events => {
-    // Calendar
     moment.locale("en-US");
     const localizer = momentLocalizer(moment);
     let eventsList = []; // Will push events to this list later
-    
+
     let i = 0;
     for (i = 0; i < group_events.length; i++) {
       if (group_events[i] !== undefined) {
-        console.log(group_events[i].eventdate);
+        // console.log(group_events[i].eventdate);
         let temp = {
-          start: group_events[i].eventdate,
-          end: group_events[i].eventdate,
-          title: group_events[i].name
+          start: group_events[i].starttime,
+          end: group_events[i].endtime,
+          title: group_events[i].name,
+          id: group_events[i]._id
         };
         eventsList.push(temp);
       }
@@ -286,6 +298,7 @@ class SingleGroup extends Component {
         step={60}
         showMultiDayTimes
         defaultDate={new Date()}
+        onSelectEvent={event => this.handleEventClicked(event)}
       />
     );
 
@@ -303,7 +316,9 @@ class SingleGroup extends Component {
       redirectToSignin,
       members,
       group_events,
-      tags
+      tags,
+      redirectToEvent,
+      eventId
     } = this.state;
 
     if (redirectToGroups) {
@@ -312,6 +327,8 @@ class SingleGroup extends Component {
       //   return <Redirect to={`/user/${userId}`} />;
     } else if (redirectToSignin) {
       return <Redirect to={`/signin`} />;
+    } else if (redirectToEvent) {
+      return <Redirect to={`/event/${eventId}`} />;
     }
 
     return (
@@ -334,13 +351,22 @@ class SingleGroup extends Component {
 
           {this.renderGroup(group)}
           {this.renderEvents(group_events)}
-          {this.renderCalender(group_events)}
 
-          {/* <Comment
-          postId={post._id}
-          comments={comments.reverse()}
-          updateComments={this.updateComments}
-        /> */}
+          <button
+            className="btn btn-outline-info"
+            type="button"
+            data-toggle="collapse"
+            data-target="#collapseCalendar"
+            aria-expanded="false"
+            aria-controls="collapseCalendar"
+          >
+            View Group Calendar
+          </button>
+          <div class="collapse" id="collapseCalendar">
+            <div class="card card-body">
+              {this.renderCalender(group_events)}
+            </div>
+          </div>
         </div>
       </>
     );

@@ -62,7 +62,7 @@ class SingleEvent extends Component {
   checkJoined = attendes => {
     const userId = isAuthenticated() && isAuthenticated().user._id;
     let match = attendes.indexOf(userId) !== -1; // if this user exists in the members array, then its index is not -1, return true; else return false
-    console.log(match);
+    // console.log(match);
     return match;
   };
 
@@ -100,7 +100,7 @@ class SingleEvent extends Component {
           attend: this.checkJoined(data.attendes)
           //   comments: data.comments
         });
-        console.log(this.state.tags);
+        // console.log(this.state.tags);
       }
     });
   };
@@ -180,7 +180,7 @@ class SingleEvent extends Component {
         <br />
         <p className="card-text">{event.description}</p>
         <br />
-        <div class="card-footer text-muted">
+        <div className="card-footer text-muted">
           <p>
             Group Administrator <Link to={`/user/${creatorId}`}>{creatorName} </Link>
             {/* on {new Date(group.created).toDateString()} */}
