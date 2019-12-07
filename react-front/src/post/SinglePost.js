@@ -150,7 +150,10 @@ class SinglePost extends Component {
                 <DeletePost postId={post._id} />
               </>
             )}
-            <Link to={`/group/${groupId}/posts`} className="btn btn-raised btn-primary btn-sm">
+            <Link
+              to={`/group/${groupId}/posts`}
+              className="btn btn-raised btn-primary btn-sm"
+            >
               Back to all posts
             </Link>
           </div>
@@ -160,7 +163,13 @@ class SinglePost extends Component {
   };
 
   render() {
-    const { post, redirectToPosts, redirectToSignin, comments, groupId } = this.state;
+    const {
+      post,
+      redirectToPosts,
+      redirectToSignin,
+      comments,
+      groupId
+    } = this.state;
 
     if (redirectToPosts) {
       return <Redirect to={`/group/${groupId}/posts`} />;

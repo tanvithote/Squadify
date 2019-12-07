@@ -20,6 +20,11 @@ import SearchGroups from "./group/SearchGroups";
 import NewEvent from "./event/NewEvent";
 import SingleEvent from "./event/SingleEvent";
 import EditEvent from "./event/EditEvent"
+import Events from "./event/Events";
+import About from "./group/About";
+import GroupPosts from "./group/GroupPosts";
+import GroupCalendar from "./group/GroupCalendar";
+
 const MainRouter = () => (
   <div>
     {/* <Menu /> */}
@@ -38,7 +43,7 @@ const MainRouter = () => (
       {/* Routes for posts */}
       <PrivateRoute exact path="/group/:groupId/post/create" component={NewPost} />
       <PrivateRoute exact path="/group/:groupId/post/edit/:postId" component={EditPost} />
-      <Route exact path="/group/:groupId/posts" component={Posts} />
+      {/* <Route exact path="/group/:groupId/posts" component={Posts} /> */}
       {/* SinglePost without a group Id */}
       <Route exact path="/post/:postId" component={SinglePost} /> 
       <Route exact path="/group/:groupId/post/:postId" component={SinglePost} />
@@ -50,9 +55,13 @@ const MainRouter = () => (
       <PrivateRoute exact path="/group/edit/:groupId" component={EditGroup} />
       <Route exact path="/groups" component={Groups} />
       <Route exact path="/groups/search/:tag" component={SearchGroups} />
+      <Route exact path="/group/:groupId/about" component={About} />
+      <Route exact path="/group/:groupId/posts" component={GroupPosts} />
+      <Route exact path="/group/:groupId/calendar" component={GroupCalendar} />
 
       {/* Routes for Events*/}
       <PrivateRoute exact path="/group/:groupId/event/create" component={NewEvent} />
+      <PrivateRoute exact path="/group/:groupId/events" component={Events} />
       <Route exact path="/event/:eventId/" component={SingleEvent} />
       <PrivateRoute exact path="/event/edit/:eventId" component={EditEvent} />
     </Switch>

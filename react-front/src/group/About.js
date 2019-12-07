@@ -4,9 +4,6 @@ import { listEventByGroup } from "../event/apiEvent";
 import { Link, Redirect } from "react-router-dom";
 import DefaultPost from "../images/tea.jpg";
 import { isAuthenticated } from "../auth";
-import { Calendar, momentLocalizer } from "react-big-calendar";
-import moment from "moment";
-import "react-big-calendar/lib/css/react-big-calendar.css";
 import { MdLocationOn } from "react-icons/md";
 import { TiTags } from "react-icons/ti";
 import { IoMdPeople } from "react-icons/io";
@@ -24,7 +21,7 @@ import Menu from "../core/Menu";
 // import Typography from '@material-ui/core/Typography';
 // import Box from '@material-ui/core/Box';
 
-class SingleGroup extends Component {
+class About extends Component {
   state = {
     group: "",
     redirectToGroups: false,
@@ -32,10 +29,8 @@ class SingleGroup extends Component {
     joined: false,
     members: [],
     tags: [],
-    // events: [],
-    group_events: [],
-    redirectToEvent: false,
-    eventId: ""
+    events: [],
+    group_events: []
   };
 
   updateMembers = members => {
@@ -100,7 +95,6 @@ class SingleGroup extends Component {
   componentDidMount = () => {
     const groupId = this.props.match.params.groupId;
     const token = isAuthenticated().token;
-
     singleGroup(groupId).then(data => {
       if (data.error) {
         console.log(data.error);
@@ -123,56 +117,6 @@ class SingleGroup extends Component {
         });
       }
     });
-  };
-
-  renderEvents = group_events => {
-    return (
-      <div>
-        <h4 className="display-4 mt-3 ml-3">
-          {" "}
-          <small class="text-muted">Events:</small>
-        </h4>
-        {group_events.map((event, i) => {
-          return (
-            <div className="col-md-4 col-xs-6 mb-2" key={i}>
-              <div class="card bwm-card">
-                <div class="card-block">
-                  <h4 class="card-title">{event.name}</h4>
-                  <h6 class="card-subtitle mb-4 text-muted">
-                    {event.description.substring(0, 100)}
-                  </h6>
-                  <p class="card-text">
-                    Date:{" "}
-                    <Link to={`${event.creatorId}`}>
-                      {event.createdBy._id}{" "}
-                    </Link>
-                    {new Date(event.eventdate).toDateString()}{" "}
-                  </p>
-                  <p class="card-text">
-                    Time:{" "}
-                    {new Date(event.starttime).toLocaleTimeString([], {
-                      hour: "2-digit",
-                      minute: "2-digit"
-                    })}{" "}
-                    to{" "}
-                    {new Date(event.endtime).toLocaleTimeString([], {
-                      hour: "2-digit",
-                      minute: "2-digit"
-                    })}
-                  </p>
-                </div>
-                <Link
-                  to={`/event/${event._id}`}
-                  className="btn btn-raised btn-info btn-sm text-center"
-                >
-                  Explore Event
-                </Link>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    );
   };
 
   renderGroup = group => {
@@ -218,6 +162,7 @@ class SingleGroup extends Component {
                 to={`/group/${groupId}/posts`}
                 className="nav-link text-info"
                 color="text-info"
+                href="/group/${groupId}/Posts"
               >
                 Posts
               </Link>
@@ -228,7 +173,14 @@ class SingleGroup extends Component {
               >
                 Calendar
               </Link>
-              {/* <Link className="nav-link text-info" color="text-info">Create Event</Link> */}
+              {/* <Link
+                to={`/group/${groupId}/events`}
+                className="nav-link text-info"
+                color="text-info"
+                href="/group/${groupId}/Members"
+              >
+                Members
+              </Link> */}
               {/* <Nav.Link className="nav-link text-info" color="text-info" href="/groups">Past Events</Nav.Link> */}
             </Nav>
           </Navbar.Collapse>
@@ -254,9 +206,12 @@ class SingleGroup extends Component {
           >
             Create Event
           </Link>
-        </div>
-        <p className="card-text">{group.about}</p> */}
+        </div>*/}
         <br />
+        <p className="card-text">{group.about}</p>
+        <br />
+        {/* {this.renderEvents(group_events)} */}
+
         <div class="card-footer text-muted">
           {/* <p>
             Group Administrator <Link to={`/user/${creatorId}`}>{creatorName} </Link>
@@ -280,73 +235,7 @@ class SingleGroup extends Component {
               </button>
             </>
           )}
-
-          {joined ? (
-            <div className="float-right">
-              {/* <span>{members.length} Members </span> */}
-              <button
-                className="btn btn-raised btn-danger btn-sm mr-3"
-                onClick={this.joinToggle}
-              >
-                Exit the group
-              </button>
-            </div>
-          ) : (
-            <div className="float-right ml-0">
-              {/* <span>{members.length} Members </span> */}
-              <button
-                className="btn btn-raised btn-info"
-                onClick={this.joinToggle}
-              >
-                Join the group
-              </button>
-            </div>
-          )}
         </div>
-      </div>
-    );
-  };
-
-  handleEventClicked = event => {
-    this.setState({ eventId: event.id, redirectToEvent: true });
-  };
-
-  renderCalender = group_events => {
-    moment.locale("en-US");
-    const localizer = momentLocalizer(moment);
-    let eventsList = []; // Will push events to this list later
-
-    let i = 0;
-    for (i = 0; i < group_events.length; i++) {
-      if (group_events[i] !== undefined) {
-        // console.log(group_events[i].eventdate);
-        let temp = {
-          start: group_events[i].starttime,
-          end: group_events[i].endtime,
-          title: group_events[i].name,
-          id: group_events[i]._id
-        };
-        eventsList.push(temp);
-      }
-    }
-
-    const MyCalendar = props => (
-      <Calendar
-        localizer={localizer}
-        events={eventsList}
-        startAccessor="start"
-        endAccessor="end"
-        style={{ height: "500px", width: "100%" }}
-        step={60}
-        showMultiDayTimes
-        defaultDate={new Date()}
-        onSelectEvent={event => this.handleEventClicked(event)}
-      />
-    );
-
-    return (
-      <div>
-        <MyCalendar />
       </div>
     );
   };
@@ -359,8 +248,7 @@ class SingleGroup extends Component {
       members,
       group_events,
       tags,
-      redirectToEvent,
-      eventId
+      joined
     } = this.state;
 
     const creatorName = group.createdBy ? group.createdBy.name : " Unknown";
@@ -372,27 +260,9 @@ class SingleGroup extends Component {
       //   return <Redirect to={`/user/${userId}`} />;
     } else if (redirectToSignin) {
       return <Redirect to={`/signin`} />;
-    } else if (redirectToEvent) {
-      return <Redirect to={`/event/${eventId}`} />;
     }
 
     return (
-      // <div className="container">
-      //   <h2 className="display-2 mt-5 ml-3">{group.name}</h2>
-      //   <h5 className="ml-3 mt-3">{group.location}</h5>
-      //   <div className="ml-3 mt-3">
-      //     {tags.map((tag, i) => {
-      //       return (
-      //         <span
-      //           key={i}
-      //           className="badge badge-pill badge-success mr-2 display-3"
-      //         >
-      //           {tag}
-      //         </span>
-      //       );
-      //     })}
-      //   </div>
-
       <div>
         <Menu />
 
@@ -407,7 +277,31 @@ class SingleGroup extends Component {
           </div>
           <div class="flex flex--row ml-3 flex--alignCenter organizer-row">
             <IoMdPeople />
-            <span> {members.length} members</span>
+            <span>
+              {" "}
+              {members.length} members
+              {joined ? (
+                <div className="float-right">
+                  {/* <span>{members.length} Members </span> */}
+                  <button
+                    className="btn btn-raised btn-danger btn-sm mr-3"
+                    onClick={this.joinToggle}
+                  >
+                    Exit the group
+                  </button>
+                </div>
+              ) : (
+                <div className="float-right ml-0">
+                  {/* <span>{members.length} Members </span> */}
+                  <button
+                    className="btn btn-raised btn-info"
+                    onClick={this.joinToggle}
+                  >
+                    Join the group
+                  </button>
+                </div>
+              )}
+            </span>
           </div>
           <div class="flex flex--row ml-3 flex--alignCenter organizer-row">
             <MdPersonOutline />
@@ -432,25 +326,15 @@ class SingleGroup extends Component {
             })}
           </div>
           {this.renderGroup(group)}
-          {/* <button
-            className="btn btn-outline-info"
-            type="button"
-            data-toggle="collapse"
-            data-target="#collapseCalendar"
-            aria-expanded="false"
-            aria-controls="collapseCalendar"
-          >
-            View Group Calendar
-          </button>
-          <div class="collapse" id="collapseCalendar">
-            <div class="card card-body">
-              {this.renderCalender(group_events)}
-            </div>
-          </div> */}
+          {/* <Comment
+          postId={post._id}
+          comments={comments.reverse()}
+          updateComments={this.updateComments}
+        /> */}
         </div>
       </div>
     );
   }
 }
 
-export default SingleGroup;
+export default About;

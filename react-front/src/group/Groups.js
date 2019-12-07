@@ -3,6 +3,8 @@ import { list } from "./apiGroup";
 import { Link } from "react-router-dom";
 import DefaultPost from "../images/tea.jpg";
 import Menu from "../core/Menu";
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
 
 class Groups extends Component {
   constructor() {
@@ -46,18 +48,18 @@ class Groups extends Component {
 
           return (
             <div className="col-md-4 col-xs-6 mb-2" key={i}>
-              <Link to="/events/details/1234">
+              
                 <div class="card bwm-card">
-                  {/* <img class='card-img-top' src='http://via.placeholder.com/350x250' alt=''></img> */}
+                  
                   <img
                     src={`${process.env.REACT_APP_API_URL}/group/photo/${group._id}`}
                     alt={group.name}
                     onError={i => (i.target.src = `${DefaultPost}`)}
                     className="card-img-top"
-                    style={{ height: "200px", width: "300px" }}
+                    style={{ height: "200px", width: "350px" }}
                   />
 
-                  <div class="card-block">
+                  <div class="card-block" style={{height:"30vh"}}>
                     <h6 class="card-subtitle">{group.name}</h6>
                     <h4 class="card-title">{group.about.substring(0, 100)}</h4>
                     <p class="card-text">
@@ -72,34 +74,8 @@ class Groups extends Component {
                     Read More About This Group
                   </Link>
                 </div>
-              </Link>
+              {/* </Link> */}
             </div>
-            // <div className="card col-md-12 mb-2" key={i}>
-            //   <div className="card-body">
-            //     <img
-            //       src={`${process.env.REACT_APP_API_URL}/group/photo/${group._id}`}
-            //       alt={group.name}
-            //       onError={i => (i.target.src = `${DefaultPost}`)}
-            //       className="img-thumbnail mb-3"
-            //       style={{ height: "200px", width: "300px" }}
-            //     />
-            //     <h5 className="card-title">{group.name}</h5>
-            //     <p className="card-text">{group.about.substring(0, 100)}</p>
-            //     <br />
-            //     <div class="card-footer text-muted">
-            //       <p>
-            //         Created by <Link to={`${creatorId}`}>{creatorName} </Link>
-            //         on {new Date(group.created).toDateString()}
-            //       </p>
-            //       <Link
-            //         to={`/group/${group._id}`}
-            //         className="btn btn-raised btn-primary btn-sm"
-            //       >
-            //         Read More About This Group
-            //       </Link>
-            //     </div>
-            //   </div>
-            // </div>
           );
         })}
       </div>
@@ -112,33 +88,32 @@ class Groups extends Component {
       <>
         <div>
           <Menu/>
-          <div className="container mt-5">
+          <div className="container fluid mt-5 ml-5">
+          
+          </div>
+        
+        <div className="container fluid">
+        <Form className='info' inline style={{ justifyContent: 'center' }}>
           <form>
              <input
               type="text"
               placeholder="Search.."
               name="search"
+              className="justify-content-left-info"
               onChange={this.queryChange}
               onSubmit={this.handleSearch}
             />
-            {/* <button onClick={handleSearch}>
-              {/* <i class="fa fa-search"></i> */}
-            {/* </button> */}
+           {/* <button onClick={handleSearch}>
+               <i class="fa fa-search"></i> 
+             </button> */}
             <Link to={`/groups/search/${query}`}>
-              <i class="fa fa-search"></i>
+            <Button variant="outline-info">Search
+        </Button>
             </Link> 
           </form>
-          </div>
-        
-        <div className="container fluid">
+          </Form>
           <span>
             <h2 className="mt-5 mb-5">All Groups</h2>
-            <Link
-              to={`/group/create`}
-              className="btn btn-raised btn-primary btn-sm mr-2"
-            >
-              Create a new group
-            </Link>
           </span>
           {this.renderGroups(groups)}
         </div>

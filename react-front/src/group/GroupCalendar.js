@@ -14,17 +14,8 @@ import { MdPersonOutline } from "react-icons/md";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import Menu from "../core/Menu";
-// import DeletePost from "./DeletePost";
-// import Comment from "./Comment";
-// import SwipeableViews from 'react-swipeable-views';
-// import { makeStyles, Theme, useTheme } from '@material-ui/core/styles';
-// import AppBar from '@material-ui/core/AppBar';
-// import Tabs from '@material-ui/core/Tabs';
-// import Tab from '@material-ui/core/Tab';
-// import Typography from '@material-ui/core/Typography';
-// import Box from '@material-ui/core/Box';
 
-class SingleGroup extends Component {
+class GroupCalendar extends Component {
   state = {
     group: "",
     redirectToGroups: false,
@@ -40,10 +31,6 @@ class SingleGroup extends Component {
 
   updateMembers = members => {
     this.setState({ members });
-  };
-
-  updateTags = tags => {
-    this.setState({ tags });
   };
 
   joinToggle = () => {
@@ -77,26 +64,6 @@ class SingleGroup extends Component {
     return match;
   };
 
-  deleteGroup = () => {
-    // const groupId = this.props.groupId;
-    const groupId = this.props.match.params.groupId;
-    const token = isAuthenticated().token;
-    remove(groupId, token).then(data => {
-      if (data.error) {
-        console.log(data.error);
-      } else {
-        this.setState({ redirectToGroups: true });
-      }
-    });
-  };
-
-  deleteConfirmed = () => {
-    let answer = window.confirm("Are you sure to delete this group?");
-    if (answer) {
-      this.deleteGroup();
-    }
-  };
-
   componentDidMount = () => {
     const groupId = this.props.match.params.groupId;
     const token = isAuthenticated().token;
@@ -114,6 +81,7 @@ class SingleGroup extends Component {
         });
       }
     });
+
     listEventByGroup(groupId, token).then(data => {
       if (data.error) {
         console.log(data.error);
@@ -280,28 +248,6 @@ class SingleGroup extends Component {
               </button>
             </>
           )}
-
-          {joined ? (
-            <div className="float-right">
-              {/* <span>{members.length} Members </span> */}
-              <button
-                className="btn btn-raised btn-danger btn-sm mr-3"
-                onClick={this.joinToggle}
-              >
-                Exit the group
-              </button>
-            </div>
-          ) : (
-            <div className="float-right ml-0">
-              {/* <span>{members.length} Members </span> */}
-              <button
-                className="btn btn-raised btn-info"
-                onClick={this.joinToggle}
-              >
-                Join the group
-              </button>
-            </div>
-          )}
         </div>
       </div>
     );
@@ -360,7 +306,8 @@ class SingleGroup extends Component {
       group_events,
       tags,
       redirectToEvent,
-      eventId
+      eventId,
+      joined
     } = this.state;
 
     const creatorName = group.createdBy ? group.createdBy.name : " Unknown";
@@ -377,22 +324,6 @@ class SingleGroup extends Component {
     }
 
     return (
-      // <div className="container">
-      //   <h2 className="display-2 mt-5 ml-3">{group.name}</h2>
-      //   <h5 className="ml-3 mt-3">{group.location}</h5>
-      //   <div className="ml-3 mt-3">
-      //     {tags.map((tag, i) => {
-      //       return (
-      //         <span
-      //           key={i}
-      //           className="badge badge-pill badge-success mr-2 display-3"
-      //         >
-      //           {tag}
-      //         </span>
-      //       );
-      //     })}
-      //   </div>
-
       <div>
         <Menu />
 
@@ -407,7 +338,31 @@ class SingleGroup extends Component {
           </div>
           <div class="flex flex--row ml-3 flex--alignCenter organizer-row">
             <IoMdPeople />
-            <span> {members.length} members</span>
+            <span>
+              {" "}
+              {members.length} members
+              {joined ? (
+                <div className="float-right">
+                  {/* <span>{members.length} Members </span> */}
+                  <button
+                    className="btn btn-raised btn-danger btn-sm mr-3"
+                    onClick={this.joinToggle}
+                  >
+                    Exit the group
+                  </button>
+                </div>
+              ) : (
+                <div className="float-right ml-0">
+                  {/* <span>{members.length} Members </span> */}
+                  <button
+                    className="btn btn-raised btn-info"
+                    onClick={this.joinToggle}
+                  >
+                    Join the group
+                  </button>
+                </div>
+              )}
+            </span>
           </div>
           <div class="flex flex--row ml-3 flex--alignCenter organizer-row">
             <MdPersonOutline />
@@ -432,25 +387,11 @@ class SingleGroup extends Component {
             })}
           </div>
           {this.renderGroup(group)}
-          {/* <button
-            className="btn btn-outline-info"
-            type="button"
-            data-toggle="collapse"
-            data-target="#collapseCalendar"
-            aria-expanded="false"
-            aria-controls="collapseCalendar"
-          >
-            View Group Calendar
-          </button>
-          <div class="collapse" id="collapseCalendar">
-            <div class="card card-body">
-              {this.renderCalender(group_events)}
-            </div>
-          </div> */}
+          <div class="card card-body">{this.renderCalender(group_events)}</div>
         </div>
       </div>
     );
   }
 }
 
-export default SingleGroup;
+export default GroupCalendar;
