@@ -156,18 +156,58 @@ exports.isCreator = (req, res, next) => {
 };
 
 exports.updateEvent = (req, res, next) => {
-  let event = req.event;
-  event = _.extend(event, req.body);
-  event.save(err => {
+  let form = new formidable.IncomingForm();
+  form.keepExtensions = true;
+  form.parse(req, (err, fields, files) => {
     if (err) {
       return res.status(400).json({
-        error: err
+        error: "Photo could not be uploaded."
       });
     }
-    res.json(event);
+    let event = req.event;
+    event = _.extend(event, fields);
+    if (files.photo) {
+      event.photo.data = fs.readFileSync(files.photo.path);
+      event.photo.contentType = files.photo.type;
+    }
+    event.save((err, reuslt) => {
+      if (err) {
+        return res.status(400).json({
+          error: err
+        });
+      }
+      return res.json(event);
+    });
+  });
+  
+};
+exports.updateGroup = (req, res, next) => {
+  let form = new formidable.IncomingForm();
+  form.keepExtensions = true;
+  form.parse(req, (err, fields, files) => {
+    if (err) {
+      return res.status(400).json({
+        error: "Photo could not be uploaded."
+      });
+    }
+    let group = req.group;
+    // Override group with new fields
+    group = _.extend(group, fields);
+    if (files.photo) {
+      group.photo.data = fs.readFileSync(files.photo.path);
+      group.photo.contentType = files.photo.type;
+    }
+
+    group.save((err, reuslt) => {
+      if (err) {
+        return res.status(400).json({
+          error: err
+        });
+      }
+      return res.json(group);
+    });
   });
 };
-
 exports.deleteEvent = (req, res) => {
   let event = req.event;
   let groupId = req.event.group;
