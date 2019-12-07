@@ -150,7 +150,7 @@ class SingleEvent extends Component {
           alt={event.name}
           onError={i => (i.target.src = `${DefaultPost}`)}
           className="img-thumbnail mb-3"
-          style={{ height: "100%", width: "100%", objectFit: "cover" }}
+          style={{ height: "300px", width: "100%", objectFit: "cover" }}
         />
 
         {attend ? (

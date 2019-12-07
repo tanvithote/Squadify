@@ -120,9 +120,28 @@ class Events extends Component {
   };
 
   renderEvents = group_events => {
-    if (group_events == null) {
-      // console.log(group_events)
-      return <div>No Events</div>;
+    if (group_events === undefined || group_events.length === false) {
+      const groupId = this.state.group._id;
+      const { joined, members } = this.state;
+      return (
+        <div>
+          {joined ? (
+            <div>
+              <br />
+              <div>Psst! Create a new event ASAP!</div>
+              <br />
+              <Link
+                to={`/group/${groupId}/event/create`}
+                className="btn btn-raised btn-info btn-sm"
+              >
+                Create Event
+              </Link>
+            </div>
+          ) : (
+            <div>Sorry, the group folks haven't created an event yet! :(</div>
+          )}
+        </div>
+      );
     } else {
       console.log(group_events);
       const groupId = this.state.group._id;

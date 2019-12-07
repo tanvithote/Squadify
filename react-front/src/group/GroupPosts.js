@@ -151,96 +151,125 @@ class GroupPosts extends Component {
   //  };
 
   renderPosts = group_posts => {
-    const groupId = this.state.group._id;
-    const { joined, members } = this.state;
-    return (
-      <div>
-        {joined ? (
-          <div>
-            <br />
-            <Link
-              to={`/group/${groupId}/post/create`}
-              className="btn btn-raised btn-info btn-sm"
-            >
-              Create Post
-            </Link>
-          </div>
-        ) : (
-          <div></div>
-        )}
-        <br />
-        {/* <h4 className="display-4 mt-3"> <small class="text-muted">Posts:</small></h4> */}
-        {/* <Link
+    if (group_posts === undefined || group_posts.length === false) {
+      const groupId = this.state.group._id;
+      const { joined, members } = this.state;
+      return (
+        <div>
+          {joined ? (
+            <div>
+              <br />
+              <div>Psst! Create a new post ASAP!</div>
+              <br />
+              <Link
+                to={`/group/${groupId}/post/create`}
+                className="btn btn-raised btn-info btn-sm"
+              >
+                Create Post
+              </Link>
+            </div>
+          ) : (
+            <div>
+              <br />
+              Sorry, the group folks haven't created a post yet! :(
+            </div>
+          )}
+        </div>
+      );
+    } else {
+      const groupId = this.state.group._id;
+      const { joined, members } = this.state;
+      return (
+        <div>
+          {joined ? (
+            <div>
+              <br />
+              <Link
+                to={`/group/${groupId}/post/create`}
+                className="btn btn-raised btn-info btn-sm"
+              >
+                Create Post
+              </Link>
+            </div>
+          ) : (
+            <div></div>
+          )}
+          <br />
+          {/* <h4 className="display-4 mt-3"> <small class="text-muted">Posts:</small></h4> */}
+          {/* <Link
             to={`/group/${groupId}/post/create`}
             className="btn btn-raised btn-info btn-sm mr-2"
           >
             Create a post
           </Link> */}
 
-        <div className="row">
-          {group_posts.map((post, i) => {
-            const posterId = post.postedBy ? `/user/{post.postedBy._id}` : "";
-            const posterName = post.postedBy ? post.postedBy.name : " Unknown";
+          <div className="row">
+            {group_posts.map((post, i) => {
+              const posterId = post.postedBy ? `/user/{post.postedBy._id}` : "";
+              const posterName = post.postedBy
+                ? post.postedBy.name
+                : " Unknown";
 
-            return (
-              <div className="col-md-4 col-xs-6 mb-2" key={i}>
-                <div class="card bwm-card">
-                  <img
-                    src={`${process.env.REACT_APP_API_URL}/post/photo/${post._id}`}
-                    alt={post.title}
-                    onError={i => (i.target.src = `${DefaultPost}`)}
-                    className="img-thumbnail mb-3"
-                    style={{ height: "200px", width: "350px" }}
-                  />
+              return (
+                <div className="col-md-4 col-xs-6 mb-2" key={i}>
+                  <div class="card bwm-card">
+                    <img
+                      src={`${process.env.REACT_APP_API_URL}/post/photo/${post._id}`}
+                      alt={post.title}
+                      onError={i => (i.target.src = `${DefaultPost}`)}
+                      className="img-thumbnail mb-3"
+                      style={{ height: "200px", width: "350px" }}
+                    />
 
-                  <div class="card-block" style={{ height: "28vh" }}>
-                    <h6 class="card-subtitle">{post.title}</h6>
-                    <h4 class="card-title">{post.body.substring(0, 100)}</h4>
-                    <p class="card-text">
-                      Possted by <Link to={`${posterId}`}>{posterName} </Link>
-                      on {new Date(post.created).toDateString()}
-                    </p>
+                    <div class="card-block" style={{ height: "28vh" }}>
+                      <h6 class="card-subtitle">{post.title}</h6>
+                      <h4 class="card-title">{post.body.substring(0, 100)}</h4>
+                      <p class="card-text">
+                        Possted by <Link to={`${posterId}`}>{posterName} </Link>
+                        on {new Date(post.created).toDateString()}
+                      </p>
+                    </div>
+                    <Link
+                      to={`post/${post._id}`}
+                      className="btn btn-raised btn-info btn-sm text-center"
+                    >
+                      Read More About This Post
+                    </Link>
                   </div>
-                  <Link
-                    to={`post/${post._id}`}
-                    className="btn btn-raised btn-info btn-sm text-center"
-                  >
-                    Read More About This Post
-                  </Link>
                 </div>
-              </div>
 
-              // <div className="card col-md-12 mb-2" key={i}>
-              //   <div className="card-body">
-              //     <img
-              //       src={`${process.env.REACT_APP_API_URL}/post/photo/${post._id}`}
-              //       alt={post.title}
-              //       onError={i => i.target.src=`${DefaultPost}`}
-              //       className="img-thumbnail mb-3"
-              //       style={{height: '200px', width:"300px"}}
-              //     />
-              //     <h5 className="card-title">{post.title}</h5>
-              //     <p className="card-text">{post.body.substring(0, 100)}</p>
-              //     <br />
-              //     <div class="card-footer text-muted">
-              //       <p>
-              //         Posted by <Link to={`${posterId}`}>{posterName} </Link>
-              //         on {new Date(post.created).toDateString()}
-              //       </p>
-              //       <Link
-              //         to={`post/${post._id}`}
-              //         className="btn btn-raised btn-primary btn-sm"
-              //       >
-              //         Read more
-              //       </Link>
-              //     </div>
-              //   </div>
-              // </div>
-            );
-          })}
+                // <div className="card col-md-12 mb-2" key={i}>
+                //   <div className="card-body">
+                //     <img
+                //       src={`${process.env.REACT_APP_API_URL}/post/photo/${post._id}`}
+                //       alt={post.title}
+                //       onError={i => i.target.src=`${DefaultPost}`}
+                //       className="img-thumbnail mb-3"
+                //       style={{height: '200px', width:"300px"}}
+                //     />
+                //     <h5 className="card-title">{post.title}</h5>
+                //     <p className="card-text">{post.body.substring(0, 100)}</p>
+                //     <br />
+                //     <div class="card-footer text-muted">
+                //       <p>
+                //         Posted by <Link to={`${posterId}`}>{posterName} </Link>
+                //         on {new Date(post.created).toDateString()}
+                //       </p>
+                //       <Link
+                //         to={`post/${post._id}`}
+                //         className="btn btn-raised btn-primary btn-sm"
+                //       >
+                //         Read more
+                //       </Link>
+                //     </div>
+                //   </div>
+                // </div>
+              );
+            })}
+          </div>
         </div>
-      </div>
-    );
+      );
+    }
   };
 
   renderGroup = group => {
