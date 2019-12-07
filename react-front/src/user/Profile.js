@@ -5,6 +5,7 @@ import { read } from "./apiUser";
 import DefaultProfile from "../images/avatar.png";
 import DeleteUser from "./DeleteUser";
 import { listByUser } from "../post/apiPost";
+import { groupsByUserJoined } from "../group/apiGroup";
 import ProfileTabs from "../user/ProfileTabs";
 import { listEventByUser } from "../event/apiEvent";
 import { Calendar, momentLocalizer } from "react-big-calendar";
@@ -19,6 +20,7 @@ class Profile extends Component {
       redirectToSignin: false,
       error: "",
       posts: [],
+      groups: [],
       events: [],
       redirectToEvent: false,
       eventId: ""
@@ -33,24 +35,15 @@ class Profile extends Component {
       } else {
         this.setState({ user: data });
         this.loadPosts(data._id); // pass userId to loadPosts by this user
+        this.loadGroups(data._id);
+        this.loadEvents(data._id);
       }
     });
   };
 
   componentDidMount() {
     const userId = this.props.match.params.userId;
-    const token = isAuthenticated().token;
     this.init(userId);
-
-    listEventByUser(userId, token).then(data => {
-      if (data.error) {
-        console.log(data.error);
-      } else {
-        this.setState({
-          events: data
-        });
-      }
-    });
   }
 
   loadPosts = userId => {
@@ -60,6 +53,29 @@ class Profile extends Component {
         console.log(data.error);
       } else {
         this.setState({ posts: data });
+      }
+    });
+  };
+
+  loadEvents = userId => {
+    const token = isAuthenticated().token;
+    listEventByUser(userId, token).then(data => {
+      if (data.error) {
+        console.log(data.error);
+      } else {
+        this.setState({ events: data });
+      }
+    });
+  };
+
+  loadGroups = userId => {
+    const token = isAuthenticated().token;
+    groupsByUserJoined(userId, token).then(data => {
+      if (data.error) {
+        console.log(data.error);
+      } else {
+        this.setState({ groups: data });
+        console.log(data);
       }
     });
   };
@@ -119,6 +135,7 @@ class Profile extends Component {
       user,
       posts,
       events,
+      groups,
       redirectToEvent,
       eventId
     } = this.state;
@@ -180,7 +197,7 @@ class Profile extends Component {
             <hr />
             <p className="lead">{user.about}</p>
             <hr />
-            <ProfileTabs posts={posts} />
+            <ProfileTabs groups={groups} posts={posts} />
           </div>
         </div>
 

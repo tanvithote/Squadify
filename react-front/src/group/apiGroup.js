@@ -48,6 +48,22 @@ export const listByUser = (userId, token) => {
     .catch(err => console.log(err));
 };
 
+// Fetch the groups that this user has joined
+export const groupsByUserJoined = (userId, token) => {
+  return fetch(`${process.env.REACT_APP_API_URL}/groups/of/${userId}`, {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`
+    }
+  })
+    .then(response => {
+      return response.json();
+    })
+    .catch(err => console.log(err));
+};
+
 export const remove = (groupId, token) => {
   return fetch(`${process.env.REACT_APP_API_URL}/group/${groupId}`, {
     method: "DELETE",
