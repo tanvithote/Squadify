@@ -23,7 +23,10 @@ import EditEvent from "./event/EditEvent"
 import Events from "./event/Events";
 import About from "./group/About";
 import GroupPosts from "./group/GroupPosts";
+<<<<<<< HEAD
 import GroupCalendar from "./group/GroupCalendar";
+=======
+>>>>>>> Made several UI changes
 
 const MainRouter = () => (
   <div>
@@ -57,7 +60,10 @@ const MainRouter = () => (
       <Route exact path="/groups/search/:tag" component={SearchGroups} />
       <Route exact path="/group/:groupId/about" component={About} />
       <Route exact path="/group/:groupId/posts" component={GroupPosts} />
+<<<<<<< HEAD
       <Route exact path="/group/:groupId/calendar" component={GroupCalendar} />
+=======
+>>>>>>> Made several UI changes
 
       {/* Routes for Events*/}
       <PrivateRoute exact path="/group/:groupId/event/create" component={NewEvent} />
