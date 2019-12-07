@@ -3,7 +3,7 @@ const formidable = require("formidable");
 const fs = require("fs");
 const _ = require("lodash");
 const User = require("../models/user");
-const Group = require("../models/group")
+const Group = require("../models/group");
 
 exports.eventById = (req, res, next, id) => {
   Event.findById(id)
@@ -19,9 +19,9 @@ exports.eventById = (req, res, next, id) => {
     });
 };
 
-exports.getEvent = (req, res)=> {
+exports.getEvent = (req, res) => {
   return res.json(req.event);
-  };
+};
 
 exports.getEvents = (req, res) => {
   const events = Event.find()
@@ -43,7 +43,7 @@ exports.getEvents = (req, res) => {
 //     let event = new Event(fields);
 //     req.profile.hashed_password = undefined;
 //     req.profile.salt = undefined;
-    
+
 //     event.createdBy = req.profile;
 //     event.group = req.group;
 //     if (files.photo) {
@@ -113,14 +113,6 @@ exports.createEvent = (req, res) => {
       res.json(result);
     });
   });
-
-  // The following part should be deleted
-  // const event = new Event(req.body);
-  // event.save().then(result => {
-  //   res.status(200).json({
-  //     event: result
-  //   });
-  // });
 };
 
 exports.eventsByGroup = (req, res) => {
@@ -128,6 +120,20 @@ exports.eventsByGroup = (req, res) => {
   Event.find({ group: req.group._id })
     .populate("group", "_id name")
     .sort("_created")
+    .exec((err, events) => {
+      if (err) {
+        return res.status(400).json({
+          error: err
+        });
+      }
+      res.json(events);
+    });
+};
+
+exports.eventsByUser = (req, res) => {
+  Event.find({ attendes: req.profile._id })
+    // .populate("group", "_id name")
+    // .sort("_created")
     .exec((err, events) => {
       if (err) {
         return res.status(400).json({
@@ -164,7 +170,7 @@ exports.updateEvent = (req, res, next) => {
 
 exports.deleteEvent = (req, res) => {
   let event = req.event;
-  let groupId=req.event.group;
+  let groupId = req.event.group;
   event.remove((err, event) => {
     if (err) {
       return res.status(400).json({
@@ -175,16 +181,16 @@ exports.deleteEvent = (req, res) => {
 
   Group.findByIdAndUpdate(
     groupId,
-    {$pull :{events:req.event._id}},
-    {new:true}
-  ).exec((err,result)=>{
-    if(err){
+    { $pull: { events: req.event._id } },
+    { new: true }
+  ).exec((err, result) => {
+    if (err) {
       return res.status(400).json({
-        error : err
+        error: err
       });
-    }else{
+    } else {
       res.json({
-        message : "Event Successfully deleted"
+        message: "Event Successfully deleted"
       });
     }
   });
@@ -193,8 +199,8 @@ exports.deleteEvent = (req, res) => {
 exports.attendEvent = (req, res) => {
   console.log(req.event._id);
   console.log(req.auth._id);
-  
-  let event_Data=null;
+
+  let event_Data = null;
   Event.findByIdAndUpdate(
     req.event._id,
     { $addToSet: { attendes: req.auth._id } },
@@ -205,26 +211,26 @@ exports.attendEvent = (req, res) => {
         error: err
       });
     } else {
-      event_Data=result;
+      event_Data = result;
     }
   });
 
   User.findByIdAndUpdate(
     req.auth._id,
-    { $addToSet :{events:req.event._id}},
-    {new :true}
-    ).exec((err,result)=>{
-      if(err){
-        return res.status(400).json({
-          error : err
-        });
-      }else{
-        res.json({
-            event : event_Data,
-            user: result
-        });
-      }
-    });
+    { $addToSet: { events: req.event._id } },
+    { new: true }
+  ).exec((err, result) => {
+    if (err) {
+      return res.status(400).json({
+        error: err
+      });
+    } else {
+      res.json({
+        event: event_Data,
+        user: result
+      });
+    }
+  });
 };
 
 exports.notAttendEventGroup = (req, res) => {
@@ -241,27 +247,27 @@ exports.notAttendEventGroup = (req, res) => {
         error: err
       });
     } else {
-      event_Data=result;
+      event_Data = result;
     }
   });
 
   User.findByIdAndUpdate(
     req.auth._id,
-    { $pull :{events:req.event._id}},
-    {new :true}
-    ).exec((err,result)=>{
-      if(err){
-        return res.status(400).json({
-          error : err
-        });
-      }else{
-        res.json({
-            event : event_Data,
-            user: result
-        });
-        console.log(event_Data,result);
-      }
-    });
+    { $pull: { events: req.event._id } },
+    { new: true }
+  ).exec((err, result) => {
+    if (err) {
+      return res.status(400).json({
+        error: err
+      });
+    } else {
+      res.json({
+        event: event_Data,
+        user: result
+      });
+      console.log(event_Data, result);
+    }
+  });
 };
 exports.photo = (req, res, next) => {
   res.set("Content-Type", req.event.photo.contentType);

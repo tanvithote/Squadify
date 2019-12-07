@@ -6,6 +6,10 @@ import DefaultProfile from "../images/avatar.png";
 import DeleteUser from "./DeleteUser";
 import { listByUser } from "../post/apiPost";
 import ProfileTabs from "../user/ProfileTabs";
+import { listEventByUser } from "../event/apiEvent";
+import { Calendar, momentLocalizer } from "react-big-calendar";
+import moment from "moment";
+import "react-big-calendar/lib/css/react-big-calendar.css";
 
 class Profile extends Component {
   constructor() {
@@ -14,7 +18,10 @@ class Profile extends Component {
       user: "",
       redirectToSignin: false,
       error: "",
-      posts: []
+      posts: [],
+      events: [],
+      redirectToEvent: false,
+      eventId: ""
     };
   }
 
@@ -31,9 +38,19 @@ class Profile extends Component {
   };
 
   componentDidMount() {
-    // console.log("user id from route params:", this.props.match.params.userId);
     const userId = this.props.match.params.userId;
+    const token = isAuthenticated().token;
     this.init(userId);
+
+    listEventByUser(userId, token).then(data => {
+      if (data.error) {
+        console.log(data.error);
+      } else {
+        this.setState({
+          events: data
+        });
+      }
+    });
   }
 
   loadPosts = userId => {
@@ -52,10 +69,64 @@ class Profile extends Component {
     this.init(userId);
   }
 
+  handleEventClicked = event => {
+    this.setState({ eventId: event.id, redirectToEvent: true });
+  };
+
+  renderCalender = events => {
+    moment.locale("en-US");
+    const localizer = momentLocalizer(moment);
+    let eventsList = []; // Will push events to this list later
+
+    let i = 0;
+    for (i = 0; i < events.length; i++) {
+      if (events[i] !== undefined) {
+        // console.log(group_events[i].eventdate);
+        let temp = {
+          start: events[i].starttime,
+          end: events[i].endtime,
+          title: events[i].name,
+          id: events[i]._id
+        };
+        eventsList.push(temp);
+      }
+    }
+
+    const MyCalendar = props => (
+      <Calendar
+        localizer={localizer}
+        events={eventsList}
+        startAccessor="start"
+        endAccessor="end"
+        style={{ height: "500px", width: "100%" }}
+        step={60}
+        showMultiDayTimes
+        defaultDate={new Date()}
+        onSelectEvent={event => this.handleEventClicked(event)}
+      />
+    );
+
+    return (
+      <div>
+        <MyCalendar />
+      </div>
+    );
+  };
+
   render() {
-    const { redirectToSignin, user, posts } = this.state;
+    const {
+      redirectToSignin,
+      user,
+      posts,
+      events,
+      redirectToEvent,
+      eventId
+    } = this.state;
+
     if (redirectToSignin) {
       return <Redirect to="/signin" />;
+    } else if (redirectToEvent) {
+      return <Redirect to={`/event/${eventId}`} />;
     }
 
     const photoUrl = user._id
@@ -111,6 +182,26 @@ class Profile extends Component {
             <hr />
             <ProfileTabs posts={posts} />
           </div>
+        </div>
+
+        <div className="row">
+          {isAuthenticated().user && isAuthenticated().user._id === user._id && (
+            <div>
+              <button
+                className="btn btn-outline-info"
+                type="button"
+                data-toggle="collapse"
+                data-target="#collapseCalendar"
+                aria-expanded="false"
+                aria-controls="collapseCalendar"
+              >
+                View My Calendar
+              </button>
+              <div class="collapse" id="collapseCalendar">
+                <div class="card card-body">{this.renderCalender(events)}</div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     );

@@ -52,6 +52,21 @@ export const listEventByGroup = (groupId, token) => {
     .catch(err => console.log(err));
 };
 
+export const listEventByUser = (userId, token) => {
+  return fetch(`${process.env.REACT_APP_API_URL}/events/of/${userId}`, {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`
+    }
+  })
+    .then(response => {
+      return response.json();
+    })
+    .catch(err => console.log(err));
+};
+
 export const remove = (eventId, token) => {
   return fetch(`${process.env.REACT_APP_API_URL}/event/${eventId}`, {
     method: "DELETE",
