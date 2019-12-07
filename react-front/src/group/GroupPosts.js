@@ -1,12 +1,10 @@
 import React, { Component } from "react";
 import { singleGroup, remove, joinGroup, unjoinGroup } from "./apiGroup";
 import { listEventByGroup } from "../event/apiEvent";
+import { list } from "../post/apiPost";
 import { Link, Redirect } from "react-router-dom";
 import DefaultPost from "../images/tea.jpg";
 import { isAuthenticated } from "../auth";
-import { Calendar, momentLocalizer } from "react-big-calendar";
-import moment from "moment";
-import "react-big-calendar/lib/css/react-big-calendar.css";
 import { MdLocationOn } from "react-icons/md";
 import { TiTags } from "react-icons/ti";
 import { IoMdPeople } from "react-icons/io";
@@ -14,17 +12,8 @@ import { MdPersonOutline } from "react-icons/md";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import Menu from "../core/Menu";
-// import DeletePost from "./DeletePost";
-// import Comment from "./Comment";
-// import SwipeableViews from 'react-swipeable-views';
-// import { makeStyles, Theme, useTheme } from '@material-ui/core/styles';
-// import AppBar from '@material-ui/core/AppBar';
-// import Tabs from '@material-ui/core/Tabs';
-// import Tab from '@material-ui/core/Tab';
-// import Typography from '@material-ui/core/Typography';
-// import Box from '@material-ui/core/Box';
 
-class SingleGroup extends Component {
+class GroupPosts extends Component {
   state = {
     group: "",
     redirectToGroups: false,
@@ -32,10 +21,9 @@ class SingleGroup extends Component {
     joined: false,
     members: [],
     tags: [],
-    // events: [],
+    events: [],
     group_events: [],
-    redirectToEvent: false,
-    eventId: ""
+    group_posts: []
   };
 
   updateMembers = members => {
@@ -100,7 +88,6 @@ class SingleGroup extends Component {
   componentDidMount = () => {
     const groupId = this.props.match.params.groupId;
     const token = isAuthenticated().token;
-
     singleGroup(groupId).then(data => {
       if (data.error) {
         console.log(data.error);
@@ -123,54 +110,135 @@ class SingleGroup extends Component {
         });
       }
     });
+    list(groupId).then(data => {
+      if (data.error) {
+        console.log(data.error);
+      } else {
+        this.setState({ group_posts: data });
+      }
+    });
   };
 
-  renderEvents = group_events => {
+  //   renderEvents = group_events =>{
+  //     return(
+  //       <div>
+  //         <h4 className="display-4 mt-3 ml-3"> <small class="text-muted">Events:</small></h4>
+  //     {group_events.map((event,i)=>{
+  //       return(
+  //         <div className='col-md-4 col-xs-6 mb-2' key={i}>
+  //                 <div class='card bwm-card'>
+
+  //                   <div class='card-block'>
+  //                     <h4 class='card-title'>{event.name}</h4>
+  //                     <h6 class='card-subtitle mb-4 text-muted'>{event.description.substring(0, 100)}</h6>
+  //                     <p class='card-text'>Event <Link to={`${event.creatorId}`}>{event.createdBy._id} </Link>
+  //                      on {new Date(event.eventdate).toDateString()} </p>
+  //                      <p class='card-text'>Timings  {new Date(event.starttime).getHours()} : {new Date(event.starttime).getMinutes()}  to
+  //                          {new Date(event.endtime).getHours()} : {new Date(event.endtime).getMinutes()} </p>
+  //                   </div>
+  //                   <Link
+  //                      to={`/event/${event._id}`}
+  //                      className="btn btn-raised btn-info btn-sm text-center"
+  //                    >
+  //                      Explore Event
+  //                    </Link>
+  //                 </div>
+  //             </div>
+  //       );
+  //     })}
+  //     </div>
+  //     );
+  //  };
+
+  renderPosts = group_posts => {
+    const groupId = this.state.group._id;
+    const { joined, members } = this.state;
     return (
       <div>
-        <h4 className="display-4 mt-3 ml-3">
-          {" "}
-          <small class="text-muted">Events:</small>
-        </h4>
-        {group_events.map((event, i) => {
-          return (
-            <div className="col-md-4 col-xs-6 mb-2" key={i}>
-              <div class="card bwm-card">
-                <div class="card-block">
-                  <h4 class="card-title">{event.name}</h4>
-                  <h6 class="card-subtitle mb-4 text-muted">
-                    {event.description.substring(0, 100)}
-                  </h6>
-                  <p class="card-text">
-                    Date:{" "}
-                    <Link to={`${event.creatorId}`}>
-                      {event.createdBy._id}{" "}
-                    </Link>
-                    {new Date(event.eventdate).toDateString()}{" "}
-                  </p>
-                  <p class="card-text">
-                    Time:{" "}
-                    {new Date(event.starttime).toLocaleTimeString([], {
-                      hour: "2-digit",
-                      minute: "2-digit"
-                    })}{" "}
-                    to{" "}
-                    {new Date(event.endtime).toLocaleTimeString([], {
-                      hour: "2-digit",
-                      minute: "2-digit"
-                    })}
-                  </p>
+        {joined ? (
+          <div>
+            <br />
+            <Link
+              to={`/group/${groupId}/post/create`}
+              className="btn btn-raised btn-info btn-sm"
+            >
+              Create Post
+            </Link>
+          </div>
+        ) : (
+          <div></div>
+        )}
+        <br />
+        {/* <h4 className="display-4 mt-3"> <small class="text-muted">Posts:</small></h4> */}
+        {/* <Link
+            to={`/group/${groupId}/post/create`}
+            className="btn btn-raised btn-info btn-sm mr-2"
+          >
+            Create a post
+          </Link> */}
+
+        <div className="row">
+          {group_posts.map((post, i) => {
+            const posterId = post.postedBy ? `/user/{post.postedBy._id}` : "";
+            const posterName = post.postedBy ? post.postedBy.name : " Unknown";
+
+            return (
+              <div className="col-md-4 col-xs-6 mb-2" key={i}>
+                <div class="card bwm-card">
+                  <img
+                    src={`${process.env.REACT_APP_API_URL}/post/photo/${post._id}`}
+                    alt={post.title}
+                    onError={i => (i.target.src = `${DefaultPost}`)}
+                    className="img-thumbnail mb-3"
+                    style={{ height: "200px", width: "350px" }}
+                  />
+
+                  <div class="card-block" style={{ height: "28vh" }}>
+                    <h6 class="card-subtitle">{post.title}</h6>
+                    <h4 class="card-title">{post.body.substring(0, 100)}</h4>
+                    <p class="card-text">
+                      Possted by <Link to={`${posterId}`}>{posterName} </Link>
+                      on {new Date(post.created).toDateString()}
+                    </p>
+                  </div>
+                  <Link
+                    to={`post/${post._id}`}
+                    className="btn btn-raised btn-info btn-sm text-center"
+                  >
+                    Read More About This Post
+                  </Link>
                 </div>
-                <Link
-                  to={`/event/${event._id}`}
-                  className="btn btn-raised btn-info btn-sm text-center"
-                >
-                  Explore Event
-                </Link>
               </div>
-            </div>
-          );
-        })}
+
+              // <div className="card col-md-12 mb-2" key={i}>
+              //   <div className="card-body">
+              //     <img
+              //       src={`${process.env.REACT_APP_API_URL}/post/photo/${post._id}`}
+              //       alt={post.title}
+              //       onError={i => i.target.src=`${DefaultPost}`}
+              //       className="img-thumbnail mb-3"
+              //       style={{height: '200px', width:"300px"}}
+              //     />
+              //     <h5 className="card-title">{post.title}</h5>
+              //     <p className="card-text">{post.body.substring(0, 100)}</p>
+              //     <br />
+              //     <div class="card-footer text-muted">
+              //       <p>
+              //         Posted by <Link to={`${posterId}`}>{posterName} </Link>
+              //         on {new Date(post.created).toDateString()}
+              //       </p>
+              //       <Link
+              //         to={`post/${post._id}`}
+              //         className="btn btn-raised btn-primary btn-sm"
+              //       >
+              //         Read more
+              //       </Link>
+              //     </div>
+              //   </div>
+              // </div>
+            );
+          })}
+        </div>
       </div>
     );
   };
@@ -178,7 +246,7 @@ class SingleGroup extends Component {
   renderGroup = group => {
     const creatorName = group.createdBy ? group.createdBy.name : " Unknown";
     const creatorId = group.createdBy ? group.createdBy._id : " Unknown";
-    const { joined, members, group_events } = this.state;
+    const { joined, group_posts } = this.state;
     const groupId = group._id;
 
     return (
@@ -228,35 +296,16 @@ class SingleGroup extends Component {
               >
                 Calendar
               </Link>
-              {/* <Link className="nav-link text-info" color="text-info">Create Event</Link> */}
               {/* <Nav.Link className="nav-link text-info" color="text-info" href="/groups">Past Events</Nav.Link> */}
             </Nav>
           </Navbar.Collapse>
         </Navbar>
 
-        {/* <div className="float-right">
-        <Link
-            to={`/group/${groupId}/posts`}
-            className="btn btn-raised btn-primary btn-sm mr-2"
-          >
-            Discussion Forum
-          </Link>
-          <Link
-            to={`/group/${groupId}/post/create`}
-            className="btn btn-raised btn-primary btn-sm mr-2"
-          >
-            Create a post
-          </Link>
-
-          <Link
-            to={`/group/${groupId}/event/create`}
-            className="btn btn-raised btn-primary btn-sm"
-          >
-            Create Event
-          </Link>
-        </div>
-        <p className="card-text">{group.about}</p> */}
+        {this.renderPosts(group_posts)}
         <br />
+        <br />
+        {/* {this.renderEvents(group_events)} */}
+
         <div class="card-footer text-muted">
           {/* <p>
             Group Administrator <Link to={`/user/${creatorId}`}>{creatorName} </Link>
@@ -280,73 +329,7 @@ class SingleGroup extends Component {
               </button>
             </>
           )}
-
-          {joined ? (
-            <div className="float-right">
-              {/* <span>{members.length} Members </span> */}
-              <button
-                className="btn btn-raised btn-danger btn-sm mr-3"
-                onClick={this.joinToggle}
-              >
-                Exit the group
-              </button>
-            </div>
-          ) : (
-            <div className="float-right ml-0">
-              {/* <span>{members.length} Members </span> */}
-              <button
-                className="btn btn-raised btn-info"
-                onClick={this.joinToggle}
-              >
-                Join the group
-              </button>
-            </div>
-          )}
         </div>
-      </div>
-    );
-  };
-
-  handleEventClicked = event => {
-    this.setState({ eventId: event.id, redirectToEvent: true });
-  };
-
-  renderCalender = group_events => {
-    moment.locale("en-US");
-    const localizer = momentLocalizer(moment);
-    let eventsList = []; // Will push events to this list later
-
-    let i = 0;
-    for (i = 0; i < group_events.length; i++) {
-      if (group_events[i] !== undefined) {
-        // console.log(group_events[i].eventdate);
-        let temp = {
-          start: group_events[i].starttime,
-          end: group_events[i].endtime,
-          title: group_events[i].name,
-          id: group_events[i]._id
-        };
-        eventsList.push(temp);
-      }
-    }
-
-    const MyCalendar = props => (
-      <Calendar
-        localizer={localizer}
-        events={eventsList}
-        startAccessor="start"
-        endAccessor="end"
-        style={{ height: "500px", width: "100%" }}
-        step={60}
-        showMultiDayTimes
-        defaultDate={new Date()}
-        onSelectEvent={event => this.handleEventClicked(event)}
-      />
-    );
-
-    return (
-      <div>
-        <MyCalendar />
       </div>
     );
   };
@@ -359,40 +342,20 @@ class SingleGroup extends Component {
       members,
       group_events,
       tags,
-      redirectToEvent,
-      eventId
+      joined
     } = this.state;
 
     const creatorName = group.createdBy ? group.createdBy.name : " Unknown";
     const creatorId = group.createdBy ? group.createdBy._id : " Unknown";
-
     if (redirectToGroups) {
       return <Redirect to={`/groups`} />;
       //   let userId = isAuthenticated().user._id;
       //   return <Redirect to={`/user/${userId}`} />;
     } else if (redirectToSignin) {
       return <Redirect to={`/signin`} />;
-    } else if (redirectToEvent) {
-      return <Redirect to={`/event/${eventId}`} />;
     }
 
     return (
-      // <div className="container">
-      //   <h2 className="display-2 mt-5 ml-3">{group.name}</h2>
-      //   <h5 className="ml-3 mt-3">{group.location}</h5>
-      //   <div className="ml-3 mt-3">
-      //     {tags.map((tag, i) => {
-      //       return (
-      //         <span
-      //           key={i}
-      //           className="badge badge-pill badge-success mr-2 display-3"
-      //         >
-      //           {tag}
-      //         </span>
-      //       );
-      //     })}
-      //   </div>
-
       <div>
         <Menu />
 
@@ -407,7 +370,31 @@ class SingleGroup extends Component {
           </div>
           <div class="flex flex--row ml-3 flex--alignCenter organizer-row">
             <IoMdPeople />
-            <span> {members.length} members</span>
+            <span>
+              {" "}
+              {members.length} members
+              {joined ? (
+                <div className="float-right">
+                  {/* <span>{members.length} Members </span> */}
+                  <button
+                    className="btn btn-raised btn-danger btn-sm mr-3"
+                    onClick={this.joinToggle}
+                  >
+                    Exit the group
+                  </button>
+                </div>
+              ) : (
+                <div className="float-right ml-0">
+                  {/* <span>{members.length} Members </span> */}
+                  <button
+                    className="btn btn-raised btn-info"
+                    onClick={this.joinToggle}
+                  >
+                    Join the group
+                  </button>
+                </div>
+              )}
+            </span>
           </div>
           <div class="flex flex--row ml-3 flex--alignCenter organizer-row">
             <MdPersonOutline />
@@ -432,25 +419,15 @@ class SingleGroup extends Component {
             })}
           </div>
           {this.renderGroup(group)}
-          {/* <button
-            className="btn btn-outline-info"
-            type="button"
-            data-toggle="collapse"
-            data-target="#collapseCalendar"
-            aria-expanded="false"
-            aria-controls="collapseCalendar"
-          >
-            View Group Calendar
-          </button>
-          <div class="collapse" id="collapseCalendar">
-            <div class="card card-body">
-              {this.renderCalender(group_events)}
-            </div>
-          </div> */}
+          {/* <Comment
+          postId={post._id}
+          comments={comments.reverse()}
+          updateComments={this.updateComments}
+        /> */}
         </div>
       </div>
     );
   }
 }
 
-export default SingleGroup;
+export default GroupPosts;
