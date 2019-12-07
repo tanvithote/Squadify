@@ -120,7 +120,7 @@ class Events extends Component {
   };
 
   renderEvents = group_events => {
-    if (group_events === undefined || group_events.length === false) {
+    if (group_events.length == false) {
       const groupId = this.state.group._id;
       const { joined, members } = this.state;
       return (
