@@ -179,7 +179,7 @@ class Events extends Component {
                       </p>
                       <p class="card-text">
                         Timings {new Date(event.starttime).getHours()} :{" "}
-                        {new Date(event.starttime).getMinutes()} to
+                        {new Date(event.starttime).getMinutes()} to {" "}
                         {new Date(event.endtime).getHours()} :{" "}
                         {new Date(event.endtime).getMinutes()}{" "}
                       </p>
