@@ -100,7 +100,6 @@ class SingleGroup extends Component {
   componentDidMount = () => {
     const groupId = this.props.match.params.groupId;
     const token = isAuthenticated().token;
-
     singleGroup(groupId).then(data => {
       if (data.error) {
         console.log(data.error);
