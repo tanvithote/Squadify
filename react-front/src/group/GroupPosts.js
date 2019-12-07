@@ -151,7 +151,7 @@ class GroupPosts extends Component {
   //  };
 
   renderPosts = group_posts => {
-    if (group_posts === undefined || group_posts.length === false) {
+    if (group_posts.length == false) {
       const groupId = this.state.group._id;
       const { joined, members } = this.state;
       return (
