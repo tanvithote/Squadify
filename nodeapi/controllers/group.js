@@ -73,6 +73,7 @@ exports.photo = (req, res, next) => {
   return res.send(req.group.photo.data);
 };
 
+// Groups created by user
 exports.groupsByUser = (req, res) => {
   Group.find({ createdBy: req.profile._id })
     .populate("createdBy", "_id name")
@@ -85,6 +86,21 @@ exports.groupsByUser = (req, res) => {
       }
       res.json(groups);
     });
+};
+
+// Groups joined by user
+exports.groupsOfUser = (req, res) => {
+    Group.find({ members: req.profile._id })
+      .select("_id name")
+      .sort("_created")
+      .exec((err, events) => {
+        if (err) {
+          return res.status(400).json({
+            error: err
+          });
+        }
+        res.json(events);
+      });
 };
 
 exports.isCreator = (req, res, next) => {
