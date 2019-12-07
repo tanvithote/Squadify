@@ -25,13 +25,13 @@ const eventSchema = new mongoose.Schema({
     trim: true,
     required: true
   },
-  eventdate:{
-      type: Date
+  eventdate: {
+    type: Date
   },
   starttime: {
     type: Date
   },
-  endtime:{
+  endtime: {
     type: Date
   },
   description: {
@@ -39,8 +39,8 @@ const eventSchema = new mongoose.Schema({
     trim: true
   },
   attendes: {
-      type: [ObjectId],
-      ref: "User"
+    type: [ObjectId],
+    ref: "User"
   },
   tags: [String],
   group: {
