@@ -8,6 +8,7 @@ import Users from "./user/Users";
 import SignInSide from "./user/Signin";
 import EditProfile from "./user/EditProfile";
 import PrivateRoute from "./auth/PrivateRoute";
+import Signout from "./user/Signout";
 import NewPost from "./post/NewPost";
 import Posts from "./post/Posts";
 import SinglePost from "./post/SinglePost";
@@ -35,6 +36,7 @@ const MainRouter = () => (
       <Route exact path="/" component={SignInSide} />
       <Route exact path="/users" component={Users} />
       <Route exact path="/signup" component={Signup} />
+      <Route exact path="/signout" component={Signout} />
 
       {/* Routes for profile */}
       <Route exact path="/user/:userId" component={Profile} />
