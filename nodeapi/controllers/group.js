@@ -4,6 +4,7 @@ const fs = require("fs");
 const _ = require("lodash");
 const User = require("../models/user");
 
+
 exports.groupById = (req, res, next, id) => {
   Group.findById(id)
     .populate("createdBy", "_id name")
@@ -27,6 +28,22 @@ exports.getGroups = (req, res) => {
       res.json(groups);
     })
     .catch(err => console.log(err));
+};
+
+exports.getGroupsbyTags = (req, res) => {
+  console.log(JSON.stringify(req.body));
+  console.log(JSON.stringify(req.body.email));
+  var groupList = []
+  user  = User.find().
+          where('email').equals(req.body.email).
+          select('tags').exec(function (err, tags) {
+            if (err) return handleError(err);
+            console.log(tags);
+            for(var i = 0; i < tags.tags.length; i++){
+              
+            }
+          });
+  
 };
 
 exports.createGroup = (req, res, next) => {
