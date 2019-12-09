@@ -18,9 +18,18 @@ const isActive = (history, path) => {
   }
 };
 
-const userId = isAuthenticated().user._id;
-const userName = isAuthenticated().user.name;
-const token = isAuthenticated().token;
+var userId = "";
+if (isAuthenticated() !== undefined && isAuthenticated().user !== undefined) {
+  userId = isAuthenticated().user._id;
+}
+var userName = "";
+if (isAuthenticated() !== undefined && isAuthenticated().user !== undefined) {
+  userName = isAuthenticated().user.name;
+}
+var token = "";
+if (isAuthenticated() !== undefined && isAuthenticated().token !== undefined) {
+  token = isAuthenticated().token;
+}
 
 const Menu = ({ history }) => (
   <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
