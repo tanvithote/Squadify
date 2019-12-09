@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { isAuthenticated } from "../auth";
 import { Redirect, Link } from "react-router-dom";
 import { singleEvent, update } from "./apiEvent";
-import DefaultPost from "../images/tea.jpg";
+import DefaultPost from "../images/tea.png";
 import Grid from "@material-ui/core/Grid";
 import {
   MuiPickersUtilsProvider,

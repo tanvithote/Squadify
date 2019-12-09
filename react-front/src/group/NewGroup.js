@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { isAuthenticated } from "../auth";
 import { create, joinGroup } from "./apiGroup";
 import { Redirect } from "react-router-dom";
-import DefaultPost from "../images/tea.jpg";
+import DefaultPost from "../images/tea.png";
 import Menu from "../core/Menu";
 import { Col, FormControl } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';

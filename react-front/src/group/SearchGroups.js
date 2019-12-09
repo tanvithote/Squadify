@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { isAuthenticated } from "../auth";
 import { Redirect, Link } from "react-router-dom";
-import DefaultPost from "../images/tea.jpg";
+import DefaultPost from "../images/tea.png";
 import { listByTag } from "../group/apiGroup";
 import ProfileTabs from "../user/ProfileTabs";
 import Menu from "../core/Menu";

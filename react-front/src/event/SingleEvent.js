@@ -2,9 +2,14 @@ import React, { Component } from "react";
 import { singleEvent, remove, attendEvent, notAttendEvent } from "./apiEvent";
 //import{listEventByGroup} from "../event/apiEvent";
 import { Link, Redirect } from "react-router-dom";
-import DefaultPost from "../images/tea.jpg";
+import DefaultPost from "../images/tea.png";
 import { isAuthenticated } from "../auth";
 import Menu from "../core/Menu";
+import { MdLocationOn } from "react-icons/md";
+import { IoMdPeople } from "react-icons/io";
+import { MdPersonOutline } from "react-icons/md";
+import {TiGroup} from "react-icons/ti"
+import { TiTags } from "react-icons/ti";
 // import Comment from "./Comment";
 // import SwipeableViews from 'react-swipeable-views';
 // import { makeStyles, Theme, useTheme } from '@material-ui/core/styles';
@@ -153,7 +158,7 @@ class SingleEvent extends Component {
           style={{ height: "300px", width: "100%", objectFit: "cover" }}
         />
 
-        {attend ? (
+        {/* {attend ? (
           <div className="float-right">
             <span> Attendes  {attendes.length}</span>
             <button
@@ -165,7 +170,7 @@ class SingleEvent extends Component {
           </div>
         ) : (
           <div className="float-right">
-            <span> Attendes  {attendes.length}</span>
+            
             <button
               className="btn btn-raised btn-primary"
               onClick={this.joinToggle}
@@ -173,18 +178,19 @@ class SingleEvent extends Component {
               Attend 
             </button>
           </div>
-        )}
+        )} */}
 
         <br />
         <br />
         <br />
+        <h6> About: </h6>
         <p className="card-text">{event.description}</p>
         <br />
         <div className="card-footer text-muted">
-          <p>
+          {/* <p>
             Group Administrator <Link to={`/user/${creatorId}`}>{creatorName} </Link>
-            {/* on {new Date(group.created).toDateString()} */}
-          </p>
+            on {new Date(group.created).toDateString()}
+          </p> */}
           <div className="d-inline-block">
             {isAuthenticated().user &&
               isAuthenticated().user._id === creatorId && (
@@ -198,15 +204,15 @@ class SingleEvent extends Component {
 
                   <button
                     onClick={this.deleteConfirmed}
-                    className="btn btn-raised btn-danger mr-3"
+                    className="btn btn-raised btn-danger btn-sm mr-3"
                   >
                     Delete Event
                   </button>
                 </>
               )}
-            <Link to={`/group/${groupId}`} className="btn btn-raised btn-primary btn-sm">
+            {/* <Link to={`/group/${groupId}`} className="btn btn-raised btn-primary btn-sm mr-3">
               Back to group
-            </Link>
+            </Link> */}
           </div>
         </div>
       </div>
@@ -220,8 +226,14 @@ class SingleEvent extends Component {
       event,
       redirectToGroup,
       redirectToSignin,
-      tags
+      tags,
+      attendes,
+      attend,
+      group
     } = this.state;
+    const groupId = event.group;
+    const creatorName = event.createdBy ? event.createdBy.name : " Unknown";
+    const creatorId = event.createdBy ? event.createdBy._id : " Unknown";
 
     if (redirectToGroup) {
       return <Redirect to={`/group/${event.group}`} />;
@@ -235,8 +247,72 @@ class SingleEvent extends Component {
       <div><Menu/>
       <div className="container">
         <h2 className="display-2 mt-5 ml-3">{event.name}</h2>
-        <h5 className="ml-3 mt-3">{event.location}</h5>
+        {/* <h5 className="ml-3 mt-3">{event.location}</h5> */}
+        <div class="flex flex--row ml-3 mr-3 flex--alignCenter organizer-row">
+            <MdLocationOn />
+            <span> {event.location}</span>
+          </div>
+          <div class="flex flex--row ml-3 flex--alignCenter organizer-row">
+            <IoMdPeople />
+            <span>    {attendes.length} Attending</span>
+          </div>
+          <div class="flex flex--row ml-3 flex--alignCenter organizer-row">
+            <MdPersonOutline />
+            <span>
+              {" "}
+              Organized by <Link to={`/user/${creatorId}`}>
+                {creatorName}{" "}
+              </Link>{" "}
+            </span>
+          </div>
+          
+          
+          
         <div className="ml-3 mt-3">
+            <TiTags />
+            {tags.map((tag, i) => {
+              return (
+                <span
+                  key={i}
+                  className="badge badge-pill badge-info mr-2 ml-2 display-3"
+                >
+                  {tag}
+                </span>
+              );
+            })}
+          </div>
+          <br/>
+          <div class="float-right">
+            {/* <TiGroup /> */}
+            <span>
+              {" "}
+              <Link to={`/group/${groupId}`} className="btn btn-raised btn-info btn-sm mr-3">
+              Back to group
+            </Link>{" "}
+            </span>
+          </div>
+          {attend ? (
+          <div className="flex flex--row ml-3 flex--alignCenter organizer-row">
+            {/* <span> Attendes  {attendes.length}</span> */}
+            <button
+              className="btn btn-raised btn-danger btn-sm mr-3"
+              onClick={this.joinToggle}
+            >
+              Not Attend
+            </button>
+          </div>
+        ) : (
+          <div className="flex flex--row ml-3 flex--alignCenter organizer-row">
+            
+            <button
+              className="btn btn-raised btn-danger btn-sm mr-3"
+              onClick={this.joinToggle}
+            >
+              Attend 
+            </button>
+          </div>
+        )}
+        {/* <div className="ml-3 mt-3">
           {tags.map((tag, i) => {
             return (
               <span
@@ -247,7 +323,7 @@ class SingleEvent extends Component {
               </span>
             );
           })}
-        </div>
+        </div> */}
 
         {this.renderEvent(event)}
         {/* {this.renderEvents(group_events)} */}

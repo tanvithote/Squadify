@@ -1,10 +1,11 @@
 import React, { Component } from "react";
 import { singlePost, like, unlike, findGroupIdOfPost } from "./apiPost";
 import { Link, Redirect } from "react-router-dom";
-import DefaultPost from "../images/tea.jpg";
+import DefaultPost from "../images/tea.png";
 import { isAuthenticated } from "../auth";
 import DeletePost from "./DeletePost";
 import Comment from "./Comment";
+import Menu from "../core/Menu";
 
 class SinglePost extends Component {
   state = {
@@ -178,6 +179,8 @@ class SinglePost extends Component {
     }
 
     return (
+      <div>
+        <Menu/>
       <div className="container">
         <h2 className="display-2 mt-5 ml-3">{post.title}</h2>
         {this.renderPost(post)}
@@ -187,6 +190,7 @@ class SinglePost extends Component {
           comments={comments.reverse()}
           updateComments={this.updateComments}
         />
+      </div>
       </div>
     );
   }

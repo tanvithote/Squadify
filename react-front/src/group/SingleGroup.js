@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { singleGroup, remove, joinGroup, unjoinGroup } from "./apiGroup";
 import { listEventByGroup } from "../event/apiEvent";
 import { Link, Redirect } from "react-router-dom";
-import DefaultPost from "../images/tea.jpg";
+import DefaultPost from "../images/tea.png";
 import { isAuthenticated } from "../auth";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
@@ -280,9 +280,9 @@ class SingleGroup extends Component {
             </>
           )}
 
-          {joined ? (
+          {/* {joined ? (
             <div className="float-right">
-              {/* <span>{members.length} Members </span> */}
+              <span>{members.length} Members </span>
               <button
                 className="btn btn-raised btn-danger btn-sm mr-3"
                 onClick={this.joinToggle}
@@ -292,7 +292,7 @@ class SingleGroup extends Component {
             </div>
           ) : (
             <div className="float-right ml-0">
-              {/* <span>{members.length} Members </span> */}
+              <span>{members.length} Members </span>
               <button
                 className="btn btn-raised btn-info"
                 onClick={this.joinToggle}
@@ -300,7 +300,7 @@ class SingleGroup extends Component {
                 Join the group
               </button>
             </div>
-          )}
+          )} */}
         </div>
       </div>
     );
@@ -359,7 +359,8 @@ class SingleGroup extends Component {
       group_events,
       tags,
       redirectToEvent,
-      eventId
+      eventId,
+      joined
     } = this.state;
 
     const creatorName = group.createdBy ? group.createdBy.name : " Unknown";
@@ -403,10 +404,33 @@ class SingleGroup extends Component {
           <div class="flex flex--row ml-3 mr-3 flex--alignCenter organizer-row">
             <MdLocationOn />
             <span> {group.location}</span>
+            
           </div>
           <div class="flex flex--row ml-3 flex--alignCenter organizer-row">
             <IoMdPeople />
-            <span> {members.length} members</span>
+            <span> <span> {" "}
+              {members.length} members
+              {joined ? (
+                <div className="float-right">
+                  {/* <span>{members.length} Members </span> */}
+                  <button
+                    className="btn btn-raised btn-danger btn-sm ml-3 mr-3"
+                    onClick={this.joinToggle}
+                  >
+                    Exit the group
+                  </button>
+                </div>
+              ) : (
+                <div className="float-right">
+                  {/* <span>{members.length} Members </span> */}
+                  <button
+                    className="btn btn-raised btn-info btn-sm ml-3 mr-3"
+                    onClick={this.joinToggle}
+                  >
+                    Join the group
+                  </button>
+                </div>
+              )}</span></span>
           </div>
           <div class="flex flex--row ml-3 flex--alignCenter organizer-row">
             <MdPersonOutline />

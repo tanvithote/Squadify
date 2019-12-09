@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { isAuthenticated } from "../auth";
 import { Redirect, Link } from "react-router-dom";
 import { singlePost, update } from "./apiPost";
-import DefaultPost from "../images/tea.jpg";
+import DefaultPost from "../images/tea.png";
 
 class EditPost extends Component {
   constructor() {
