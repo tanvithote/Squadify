@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { singleGroup, remove, joinGroup, unjoinGroup } from "../group/apiGroup";
 import { listEventByGroup } from "../event/apiEvent";
 import { Link, Redirect } from "react-router-dom";
-import DefaultPost from "../images/tea.jpg";
+import DefaultPost from "../images/tea.png";
 import { isAuthenticated } from "../auth";
 import { MdLocationOn } from "react-icons/md";
 import { TiTags } from "react-icons/ti";

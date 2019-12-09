@@ -11,6 +11,9 @@ import { listEventByUser } from "../event/apiEvent";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
+import Menu from "../core/Menu";
+import Nav from "react-bootstrap/Nav";
+import Navbar from "react-bootstrap/Navbar";
 
 class Profile extends Component {
   constructor() {
@@ -153,6 +156,9 @@ class Profile extends Component {
       : DefaultProfile;
 
     return (
+      <div>
+        <Menu />
+      
       <div className="container">
         <h2 className="mt-5 mb-5">Profile</h2>
         <div className="row">
@@ -173,15 +179,15 @@ class Profile extends Component {
             </div>
             {isAuthenticated().user && isAuthenticated().user._id === user._id && (
               <div className="d-inline-block">
-                <Link
+                {/* <Link
                   className="btn btn-raised btn-info mr-3"
                   to={`/post/create`}
                 >
                   Create New Post
-                </Link>
+                </Link> */}
 
                 <Link
-                  className="btn btn-raised btn-success mr-3"
+                  className="btn btn-raised btn-info mr-3"
                   to={`/user/edit/${user._id}`}
                 >
                   Edit Profile
@@ -191,11 +197,51 @@ class Profile extends Component {
             )}
           </div>
         </div>
+        <br/>
+        <br/>
+
+            {/* <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+          <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+          <Navbar.Collapse id="responsive-navbar-nav">
+            <Nav className="mr-auto">
+              <Link
+                
+                className="nav-link text-info"
+                color="text-info"
+              >
+                My Groups
+              </Link>
+              {/* <Nav.Link href="/group/create">About</Nav.Link> */}
+              {/* <Link
+                
+                className="nav-link text-info"
+                color="text-info"
+              >
+                My Events
+              </Link>
+              <Link
+                
+                className="nav-link text-info"
+                color="text-info"
+              >
+                My Calendar
+              </Link>
+              
+              {/* <Link className="nav-link text-info" color="text-info">Create Event</Link> */}
+              {/* <Nav.Link className="nav-link text-info" color="text-info" href="/groups">Past Events</Nav.Link> */}
+            {/* </Nav>
+          </Navbar.Collapse>
+        </Navbar>  */}
+
+
+
+
+
 
         <div className="row">
           <div className="col md-12 mt-5 mb-5">
             <hr />
-            <p className="lead">{user.about}</p>
+            {/* <p className="lead">{user.about}</p> */}
             <hr />
             <ProfileTabs groups={groups} posts={posts} />
           </div>
@@ -220,6 +266,7 @@ class Profile extends Component {
             </div>
           )}
         </div>
+      </div>
       </div>
     );
   }

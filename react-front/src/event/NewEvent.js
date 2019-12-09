@@ -4,7 +4,7 @@ import { create, attendEvent } from "./apiEvent";
 import { singleGroup } from "../group/apiGroup";
 import { Redirect } from "react-router-dom";
 import "date-fns";
-import DefaultPost from "../images/tea.jpg";
+import DefaultPost from "../images/tea.png";
 import Grid from "@material-ui/core/Grid";
 import {
   MuiPickersUtilsProvider,
@@ -245,7 +245,7 @@ class NewEvent extends Component {
           className="form-control"
         ></input>
       </div>
-      <button onClick={this.clickSubmit} className="btn btn-raised btn-primary">
+      <button onClick={this.clickSubmit} className="btn btn-raised btn-info">
         Create Event
       </button>
     </form>

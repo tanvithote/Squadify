@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { isAuthenticated } from "../auth";
 import { Redirect, Link } from "react-router-dom";
 import { singleGroup, update } from "./apiGroup";
-import DefaultPost from "../images/tea.jpg";
+import DefaultPost from "../images/tea.png";
 
 class EditGroup extends Component {
   constructor() {

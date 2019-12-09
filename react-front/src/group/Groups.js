@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { list } from "./apiGroup";
 import { Link } from "react-router-dom";
-import DefaultPost from "../images/tea.jpg";
+import DefaultPost from "../images/tea.png";
 import Menu from "../core/Menu";
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
