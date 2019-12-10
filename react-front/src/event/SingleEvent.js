@@ -54,6 +54,7 @@ class SingleEvent extends Component {
       if (data.error) {
         console.log("error in api :", data.error);
       } else {
+        console.log(data);
         this.setState({
         attend: !this.state.attend,
         attendes: data.event.attendes,
@@ -155,7 +156,7 @@ class SingleEvent extends Component {
           alt={event.name}
           onError={i => (i.target.src = `${DefaultPost}`)}
           className="img-thumbnail mb-3"
-          style={{ height: "300px", width: "100%", objectFit: "cover" }}
+          style={{ flex :1 , height: 500, width: 1200, resizeMode: "contain" }}
         />
 
         {/* {attend ? (
@@ -181,11 +182,19 @@ class SingleEvent extends Component {
         )} */}
 
         <br />
-        <br />
-        <br />
-        <h6> About: </h6>
+        
+        <h4> Description : </h4>
         <p className="card-text">{event.description}</p>
         <br />
+        <p class="card-text">
+                        Event on {new Date(event.eventdate).toDateString()}{" "}
+                      </p>
+                      <p class="card-text">
+                        Timings {new Date(event.starttime).getHours()} :{" "}
+                        {new Date(event.starttime).getMinutes()} to {" "}
+                        {new Date(event.endtime).getHours()} :{" "}
+                        {new Date(event.endtime).getMinutes()}{" "}
+                      </p>
         <div className="card-footer text-muted">
           {/* <p>
             Group Administrator <Link to={`/user/${creatorId}`}>{creatorName} </Link>
