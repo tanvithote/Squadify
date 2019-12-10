@@ -30,18 +30,35 @@ exports.getGroups = (req, res) => {
     .catch(err => console.log(err));
 };
 
+function putGroup(tag,grpList){
+
+}
+
+
 exports.getGroupsbyTags = (req, res) => {
   console.log(JSON.stringify(req.body));
   console.log(JSON.stringify(req.body.email));
-  var groupList = []
+  const tagList = [];
   user  = User.find().
           where('email').equals(req.body.email).
           select('tags').exec(function (err, tags) {
             if (err) return handleError(err);
-            console.log(tags);
-            for(var i = 0; i < tags.tags.length; i++){
-              
+            console.log("TagList:");
+            tagList.push(tags[0].tags);
+            console.log(tagList)
+            const groupList = [];
+            //console.log(tags[0].tags);
+            for(var i = 0; i < tags[0].tags.length; i++){
+              //putGroup(tagList[0][i],groupList);
+              Group.find({ tags: tags[0].tags[i].toLowerCase() })
+              .populate("createdBy", "_id name")
+              .exec(function (err, grps){
+                  console.log(grps);
+                  res.json(grps);
+              });
             }
+            console.log("GroupList");
+            console.log(groupList);
           });
   
 };
