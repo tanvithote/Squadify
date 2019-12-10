@@ -156,13 +156,10 @@ class GroupCalendar extends Component {
           alt={group.name}
           onError={i => (i.target.src = `${DefaultPost}`)}
           className="img-thumbnail mb-3"
-          style={{ height: "300px", width: "100%", objectFit: "cover" }}
+          style={{ flex :1 , height: 500, width: 1200, resizeMode: "contain"}}
         />
 
         <br />
-        <br />
-        <br />
-
         <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="responsive-navbar-nav">

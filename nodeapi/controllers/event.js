@@ -181,33 +181,6 @@ exports.updateEvent = (req, res, next) => {
   });
   
 };
-exports.updateGroup = (req, res, next) => {
-  let form = new formidable.IncomingForm();
-  form.keepExtensions = true;
-  form.parse(req, (err, fields, files) => {
-    if (err) {
-      return res.status(400).json({
-        error: "Photo could not be uploaded."
-      });
-    }
-    let group = req.group;
-    // Override group with new fields
-    group = _.extend(group, fields);
-    if (files.photo) {
-      group.photo.data = fs.readFileSync(files.photo.path);
-      group.photo.contentType = files.photo.type;
-    }
-
-    group.save((err, reuslt) => {
-      if (err) {
-        return res.status(400).json({
-          error: err
-        });
-      }
-      return res.json(group);
-    });
-  });
-};
 exports.deleteEvent = (req, res) => {
   let event = req.event;
   let groupId = req.event.group;
@@ -279,7 +252,7 @@ exports.notAttendEventGroup = (req, res) => {
   let event_Data = null;
   Event.findByIdAndUpdate(
     req.event._id,
-    { $pull: { attendes: req.body.userId } },
+    { $pull: { attendes: req.auth._id } },
     { new: true } // required by Mongoose
   ).exec((err, result) => {
     if (err) {
