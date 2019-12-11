@@ -10,7 +10,7 @@ class Signout extends Component {
     };
   }
   componentDidMount = () => {
-    this.id = setTimeout(() => this.setState({ redirectToSignin: true }), 2000);
+    this.id = setTimeout(() => this.setState({ redirectToSignin: true }), 1500);
   };
 
   componentWillUnmount() {
