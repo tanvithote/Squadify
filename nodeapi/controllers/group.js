@@ -30,37 +30,41 @@ exports.getGroups = (req, res) => {
     .catch(err => console.log(err));
 };
 
-function putGroup(tag,grpList){
-
+function putGroup(tag){
+  console.log("the tage is : ", tag);
+  group = Group.find({ tags: tag.toLowerCase() }).exec(function(err, grps){
+    for( var i =0; i< grps.length; i++)
+      groupList.push(grps[i]);
+  });
 }
 
+global.groupList = [];
 
 exports.getGroupsbyTags = (req, res) => {
-  console.log(JSON.stringify(req.body));
-  console.log(JSON.stringify(req.body.email));
+  //console.log(JSON.stringify(req.body));
+  //console.log(JSON.stringify(req.body.email));
   const tagList = [];
   user  = User.find().
           where('email').equals(req.body.email).
           select('tags').exec(function (err, tags) {
             if (err) return handleError(err);
-            console.log("TagList:");
-            tagList.push(tags[0].tags);
-            console.log(tagList)
-            const groupList = [];
+            //console.log("TagList:");
+            //tagList.push(tags[0].tags);
+            //console.log(tagList)
+            
             //console.log(tags[0].tags);
             for(var i = 0; i < tags[0].tags.length; i++){
-              //putGroup(tagList[0][i],groupList);
-              Group.find({ tags: tags[0].tags[i].toLowerCase() })
-              .populate("createdBy", "_id name")
-              .exec(function (err, grps){
-                  console.log(grps);
-                  res.json(grps);
-              });
+              putGroup(tags[0].tags[i]);
+              // console.log(tags[0].tags[i]);
             }
-            console.log("GroupList");
-            console.log(groupList);
+            //console.log("GroupList");
+            
+            //res.json(groupList);
+           
           });
-  
+
+          console.log(groupList);
+           res.json(groupList).then(groupList.length = 0);
 };
 
 exports.createGroup = (req, res, next) => {

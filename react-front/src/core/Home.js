@@ -35,15 +35,16 @@ class Home extends Component{
     })
       .then(res =>  res.json())
       .then((jsonData) =>{
-          console.log(jsonData);
+          //console.log(jsonData);
           this.setState({groups: jsonData})
+          console.log(this.state.groups)
       }
       )
    }
 
    renderGroups = groups => {
     return (
-      <div className="row">
+      <div className="col">
         {groups.map((group, i) => {
           const creatorId = group.createdBy
             ? `/user/{group.createdBy._id}`
@@ -62,11 +63,12 @@ class Home extends Component{
                     alt={group.name}
                     onError={i => (i.target.src = `${DefaultPost}`)}
                     className="card-img-top"
-                    style={{ height: "200px", width: "300px" }}
+                    style={{ height: "200px", width: "250px" }}
                   />
 
                   <div class="card-block">
                     <h6 class="card-subtitle">{group.name}</h6>
+                    {console.log(group.name, group.about)}
                     <h4 class="card-title">{group.about.substring(0, 100)}</h4>
                     <p class="card-text">
                       Created by <Link to={`${creatorId}`}>{creatorName} </Link>
@@ -85,6 +87,7 @@ class Home extends Component{
 
           );
         })}
+        
       </div>
     );
   };
@@ -98,9 +101,9 @@ class Home extends Component{
       <div>
       <Container>
         <Row>
-          <Col lg = {3} >sssss</Col>
-          <Col lg = {6}>dddddddd</Col>
-          <Col lg = {3}>{this.renderGroups(this.state.groups)}</Col>
+      <Col xl = {3} >{ /* insert event and calender related function here */}</Col>
+      <Col xl = {6}>{ /* insert latests posts here */}</Col>
+          <Col xl = {3}>{this.renderGroups(this.state.groups)}</Col>
         </Row>
       </Container>
       </div>
