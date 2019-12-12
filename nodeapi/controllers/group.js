@@ -31,7 +31,6 @@ exports.getGroups = (req, res) => {
 };
 
 function putGroup(tag){
-  console.log("the tage is : ", tag);
   group = Group.find({ tags: tag.toLowerCase() }).exec(function(err, grps){
     for( var i =0; i< grps.length; i++)
       groupList.push(grps[i]);
@@ -41,30 +40,16 @@ function putGroup(tag){
 global.groupList = [];
 
 exports.getGroupsbyTags = (req, res) => {
-  //console.log(JSON.stringify(req.body));
-  //console.log(JSON.stringify(req.body.email));
   const tagList = [];
-  user  = User.find().
-          where('email').equals(req.body.email).
+  user  = User.find({_id: req.body._id }).
           select('tags').exec(function (err, tags) {
             if (err) return handleError(err);
-            //console.log("TagList:");
-            //tagList.push(tags[0].tags);
-            //console.log(tagList)
-            
-            //console.log(tags[0].tags);
             for(var i = 0; i < tags[0].tags.length; i++){
               putGroup(tags[0].tags[i]);
-              // console.log(tags[0].tags[i]);
             }
-            //console.log("GroupList");
-            
-            //res.json(groupList);
-           
           });
-
           console.log(groupList);
-           res.json(groupList).then(groupList.length = 0);
+          res.json(groupList).then(groupList.length = 0);
 };
 
 exports.createGroup = (req, res, next) => {

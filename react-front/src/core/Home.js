@@ -28,7 +28,7 @@ class Home extends Component{
     const user = isAuthenticated().user;
     
     console.log(user);
-    fetch('http://localhost:8080/groupsbyTags',{
+    fetch(`${process.env.REACT_APP_API_URL}/groupsbyTags`,{
       method: 'POST',
       body: JSON.stringify(user),
       headers: {"Content-Type": "application/json"}
