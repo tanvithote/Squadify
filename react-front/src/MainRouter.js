@@ -25,6 +25,8 @@ import Events from "./event/Events";
 import About from "./group/About";
 import GroupPosts from "./group/GroupPosts";
 import GroupCalendar from "./group/GroupCalendar";
+import ForgotPassword from "./user/ForgotPassword";
+import ResetPassword from "./user/ResetPassword";
 
 const MainRouter = () => (
   <div>
@@ -33,6 +35,8 @@ const MainRouter = () => (
       {/* Routes for authentications */}
       <Route exact path="/signin" component={SignInSide} />
       <Route exact path="/home" component={Home} />
+      <Route exact path="/forgot-password" component={ForgotPassword} />
+      <Route exact path="/reset-password/:resetPasswordToken" component={ResetPassword} />
       <Route exact path="/" component={SignInSide} />
       <Route exact path="/users" component={Users} />
       <Route exact path="/signup" component={Signup} />
