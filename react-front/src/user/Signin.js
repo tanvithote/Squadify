@@ -18,6 +18,7 @@ import { makeStyles } from "@material-ui/core/styles";
 //import withStyles from './css/Styles'
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/styles";
+import SocialLogin from "./SocialLogin";
 
 import image from "../icon2.png";
 function Copyright() {
@@ -136,9 +137,19 @@ class SignInSide extends Component {
           >
             Sign In
           </button>
+          <div className="row">
           <Link className="nav-link mx-auto" to="/signup">
             Don't have an account? Sign Up
           </Link>
+          <Link to="/forgot-password" className=" nav-link mx-auto text-danger">
+            {" "}
+              Forgot Password
+          </Link>
+          </div>
+          
+          <hr />
+            <SocialLogin />
+       
         </div>
       </form>
     </div>

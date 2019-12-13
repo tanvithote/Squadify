@@ -41,7 +41,11 @@ const userSchema = new mongoose.Schema({
   events:{
     type:[ObjectId],
     ref:"Events"
-  }
+  },
+  resetPasswordLink: {
+    data: String,
+    default: ""
+}
 });
 
 // virtual field
