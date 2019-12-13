@@ -39,31 +39,30 @@ class Home extends Component {
       <div className="col">
         {groups.map((group, i) => {
           const creatorId = group.createdBy
-            ? `/user/${group.createdBy._id}`
+            ? group.createdBy._id
             : "";
           const creatorName = group.createdBy
             ? group.createdBy.name
             : " Unknown";
 
           return (
-            <div key={i}>
-              <Link to="/events/details/1234">
-                <div class="card bwm-card">
-                  {/* <img class='card-img-top' src='http://via.placeholder.com/350x250' alt=''></img> */}
+            <div className="col-md-4 col-xs-6 mb-2" key={i}>
+              
+                <div class="card bwm-card" style={{ width: "350px" }}>
+                  
                   <img
                     src={`${process.env.REACT_APP_API_URL}/group/photo/${group._id}`}
                     alt={group.name}
                     onError={i => (i.target.src = `${DefaultPost}`)}
                     className="card-img-top"
-                    style={{ height: "200px", width: "250px" }}
+                    style={{ height: "200px", width: "350px" }}
                   />
 
-                  <div class="card-block">
+                  <div class="card-block" style={{height:"30vh", width: "350px" }}>
                     <h6 class="card-subtitle">{group.name}</h6>
-                    {console.log(group.name, group.about)}
                     <h4 class="card-title">{group.about.substring(0, 100)}</h4>
                     <p class="card-text">
-                      Created by <Link to={`${creatorId}`}>{creatorName} </Link>
+                      Created by <Link to={`/user/${creatorId}`}>{creatorName} </Link>
                       on {new Date(group.created).toDateString()}
                     </p>
                   </div>
@@ -74,7 +73,7 @@ class Home extends Component {
                     Read More About This Group
                   </Link>
                 </div>
-              </Link>
+              {/* </Link> */}
             </div>
           );
         })}
