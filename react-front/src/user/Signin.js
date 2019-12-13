@@ -133,23 +133,24 @@ class SignInSide extends Component {
           </div>
           <button
             onClick={this.clickSubmit}
-            className="btn btn-raised btn-info mx-auto d-block"
+            className="btn btn-raised btn-info mx-auto d-block mt-5"
           >
             Sign In
           </button>
-          <div className="row">
-          <Link className="nav-link mx-auto" to="/signup">
-            Don't have an account? Sign Up
-          </Link>
-          <Link to="/forgot-password" className=" nav-link mx-auto text-danger">
-            {" "}
-              Forgot Password
-          </Link>
-          </div>
           
-          <hr />
-            <SocialLogin />
-       
+          <SocialLogin />
+          <div className="row mt-2">
+            <Link className="nav-link mx-auto" to="/signup">
+              Don't have an account? Sign Up
+            </Link>
+            <Link
+              to="/forgot-password"
+              className=" nav-link mx-auto text-info"
+            >
+              Forgot Password? Reset it
+            </Link>
+          </div>
+
         </div>
       </form>
     </div>
