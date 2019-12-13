@@ -5,6 +5,7 @@ const _ = require("lodash");
 const User = require("../models/user");
 
 
+
 exports.groupById = (req, res, next, id) => {
   Group.findById(id)
     .populate("createdBy", "_id name")
@@ -31,7 +32,7 @@ exports.getGroups = (req, res) => {
 };
 
 function putGroup(tag){
-  group = Group.find({ tags: tag.toLowerCase() }).exec(function(err, grps){
+  group = Group.find({ tags: tag.toLowerCase() }).populate("createdBy", "_id name").exec(function(err, grps){
     for( var i =0; i< grps.length; i++)
       groupList.push(grps[i]);
   });
@@ -41,7 +42,9 @@ global.groupList = [];
 
 exports.getGroupsbyTags = (req, res) => {
   const tagList = [];
-  user  = User.find({_id: req.body._id }).
+  const id = req.query.id;
+  console.log(id);
+  user  = User.find({_id: id }).
           select('tags').exec(function (err, tags) {
             if (err) return handleError(err);
             for(var i = 0; i < tags[0].tags.length; i++){

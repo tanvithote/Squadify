@@ -12,7 +12,7 @@ import DefaultPost from "../images/tea.jpg";
 class Home extends Component {
   constructor() {
     super();
-    this.state = { paramlist: [], reloadPage: false };
+    this.state = { paramlist: [], reloadPage: false, groups:[] };
   }
 
   componentDidMount() {
@@ -24,12 +24,8 @@ class Home extends Component {
     const token = isAuthenticated().token;
     const user = isAuthenticated().user;
 
-    console.log(user);
-    fetch(`${process.env.REACT_APP_API_URL}/groupsbyTags`, {
-      method: "POST",
-      body: JSON.stringify(user),
-      headers: { "Content-Type": "application/json" }
-    })
+    console.log(user._id);
+    fetch(`${process.env.REACT_APP_API_URL}/groupsbyTags?id=${user._id}`)
       .then(res => res.json())
       .then(jsonData => {
         //console.log(jsonData);
@@ -43,7 +39,7 @@ class Home extends Component {
       <div className="col">
         {groups.map((group, i) => {
           const creatorId = group.createdBy
-            ? `/user/{group.createdBy._id}`
+            ? `/user/${group.createdBy._id}`
             : "";
           const creatorName = group.createdBy
             ? group.createdBy.name
