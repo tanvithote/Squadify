@@ -175,13 +175,25 @@ class Events extends Component {
                         {event.description.substring(0, 100)}
                       </h6>
                       <p class="card-text">
-                        Event on {new Date(event.eventdate).toDateString()}{" "}
+                        Date: {new Date(event.eventdate).toDateString()}{" "}
                       </p>
-                      <p class="card-text">
+                      {/* <p class="card-text">
                         Timings {new Date(event.starttime).getHours()} :{" "}
                         {new Date(event.starttime).getMinutes()} to {" "}
                         {new Date(event.endtime).getHours()} :{" "}
                         {new Date(event.endtime).getMinutes()}{" "}
+                      </p> */}
+                      <p class="card-text">
+                        Time:{" "}
+                        {new Date(event.starttime).toLocaleTimeString([], {
+                          hour: "2-digit",
+                          minute: "2-digit"
+                        })}{" "}
+                        to{" "}
+                        {new Date(event.endtime).toLocaleTimeString([], {
+                          hour: "2-digit",
+                          minute: "2-digit"
+                        })}
                       </p>
                     </div>
                     <Link
@@ -213,11 +225,11 @@ class Events extends Component {
           alt={group.name}
           onError={i => (i.target.src = `${DefaultPost}`)}
           className="img-thumbnail mb-3"
-          style={{flex :1 , height: 500, width: 1200, resizeMode: "contain"}}
+          style={{ flex: 1, height: 500, width: 1200, resizeMode: "contain" }}
         />
 
         <br />
-        
+
         <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="responsive-navbar-nav">

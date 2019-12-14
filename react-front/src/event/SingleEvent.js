@@ -8,7 +8,7 @@ import Menu from "../core/Menu";
 import { MdLocationOn } from "react-icons/md";
 import { IoMdPeople } from "react-icons/io";
 import { MdPersonOutline } from "react-icons/md";
-import {TiGroup} from "react-icons/ti"
+import { TiGroup } from "react-icons/ti";
 import { TiTags } from "react-icons/ti";
 // import Comment from "./Comment";
 // import SwipeableViews from 'react-swipeable-views';
@@ -27,7 +27,7 @@ class SingleEvent extends Component {
     attend: false,
     attendes: [],
     tags: [],
-    group:""
+    group: ""
   };
 
   updateAttendes = attendes => {
@@ -56,9 +56,9 @@ class SingleEvent extends Component {
       } else {
         console.log(data);
         this.setState({
-        attend: !this.state.attend,
-        attendes: data.event.attendes,
-        tags: data.event.tags
+          attend: !this.state.attend,
+          attendes: data.event.attendes,
+          tags: data.event.tags
         });
       }
     });
@@ -95,7 +95,7 @@ class SingleEvent extends Component {
   componentDidMount = () => {
     const eventId = this.props.match.params.eventId;
     const token = isAuthenticated().token;
-    singleEvent(eventId,token).then(data => {
+    singleEvent(eventId, token).then(data => {
       if (data.error) {
         console.log(data.error);
       } else {
@@ -111,37 +111,37 @@ class SingleEvent extends Component {
     });
   };
 
-//   renderEvents = group_events =>{
-//     return(
-//       <div>
-//         <h4 className="display-4 mt-3 ml-3"> <small class="text-muted">Events:</small></h4>
-//     {group_events.map((event,i)=>{
-//       return(
-//         <div className='col-md-4 col-xs-6 mb-2' key={i}>
-//                 <div class='card bwm-card'>
-                
-//                   <div class='card-block'>
-//                     <h4 class='card-title'>{event.name}</h4>
-//                     <h6 class='card-subtitle mb-4 text-muted'>{event.description.substring(0, 100)}</h6>
-//                     <p class='card-text'>Event <Link to={`${event.creatorId}`}>{event.createdBy._id} </Link>
-//                      on {new Date(event.eventdate).toDateString()} </p>
-//                      <p class='card-text'>Timings  {new Date(event.starttime).getHours()} : {new Date(event.starttime).getMinutes()}  to 
-//                          {new Date(event.endtime).getHours()} : {new Date(event.endtime).getMinutes()} </p>
-//                   </div>
-//                   <Link
-//                      to={`/event/${event._id}`}
-//                      className="btn btn-raised btn-info btn-sm text-center"
-//                    >
-//                      Read More About This Event
-//                    </Link>
-//                 </div>
-//             </div>
-//       );
-//     })}
-//     </div>
-//     );
-//  };
- 
+  //   renderEvents = group_events =>{
+  //     return(
+  //       <div>
+  //         <h4 className="display-4 mt-3 ml-3"> <small class="text-muted">Events:</small></h4>
+  //     {group_events.map((event,i)=>{
+  //       return(
+  //         <div className='col-md-4 col-xs-6 mb-2' key={i}>
+  //                 <div class='card bwm-card'>
+
+  //                   <div class='card-block'>
+  //                     <h4 class='card-title'>{event.name}</h4>
+  //                     <h6 class='card-subtitle mb-4 text-muted'>{event.description.substring(0, 100)}</h6>
+  //                     <p class='card-text'>Event <Link to={`${event.creatorId}`}>{event.createdBy._id} </Link>
+  //                      on {new Date(event.eventdate).toDateString()} </p>
+  //                      <p class='card-text'>Timings  {new Date(event.starttime).getHours()} : {new Date(event.starttime).getMinutes()}  to
+  //                          {new Date(event.endtime).getHours()} : {new Date(event.endtime).getMinutes()} </p>
+  //                   </div>
+  //                   <Link
+  //                      to={`/event/${event._id}`}
+  //                      className="btn btn-raised btn-info btn-sm text-center"
+  //                    >
+  //                      Read More About This Event
+  //                    </Link>
+  //                 </div>
+  //             </div>
+  //       );
+  //     })}
+  //     </div>
+  //     );
+  //  };
+
   renderEvent = event => {
     const creatorName = event.createdBy ? event.createdBy.name : " Unknown";
     const creatorId = event.createdBy ? event.createdBy._id : " Unknown";
@@ -156,7 +156,7 @@ class SingleEvent extends Component {
           alt={event.name}
           onError={i => (i.target.src = `${DefaultPost}`)}
           className="img-thumbnail mb-3"
-          style={{ flex :1 , height: 500, width: 1200, resizeMode: "contain" }}
+          style={{ flex: 1, height: 500, width: 1200, resizeMode: "contain" }}
         />
 
         {/* {attend ? (
@@ -182,19 +182,31 @@ class SingleEvent extends Component {
         )} */}
 
         <br />
-        
+
         <h4> Description : </h4>
         <p className="card-text">{event.description}</p>
         <br />
         <p class="card-text">
-                        Event on {new Date(event.eventdate).toDateString()}{" "}
-                      </p>
-                      <p class="card-text">
+          Date: {new Date(event.eventdate).toDateString()}{" "}
+        </p>
+        {/* <p class="card-text">
                         Timings {new Date(event.starttime).getHours()} :{" "}
                         {new Date(event.starttime).getMinutes()} to {" "}
                         {new Date(event.endtime).getHours()} :{" "}
                         {new Date(event.endtime).getMinutes()}{" "}
-                      </p>
+                      </p> */}
+        <p class="card-text">
+          Time:{" "}
+          {new Date(event.starttime).toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit"
+          })}{" "}
+          to{" "}
+          {new Date(event.endtime).toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit"
+          })}
+        </p>
         <div className="card-footer text-muted">
           {/* <p>
             Group Administrator <Link to={`/user/${creatorId}`}>{creatorName} </Link>
@@ -225,10 +237,8 @@ class SingleEvent extends Component {
           </div>
         </div>
       </div>
-
     );
   };
-
 
   render() {
     const {
@@ -253,17 +263,18 @@ class SingleEvent extends Component {
     }
 
     return (
-      <div><Menu/>
-      <div className="container">
-        <h2 className="display-2 mt-5 ml-3">{event.name}</h2>
-        {/* <h5 className="ml-3 mt-3">{event.location}</h5> */}
-        <div class="flex flex--row ml-3 mr-3 flex--alignCenter organizer-row">
+      <div>
+        <Menu />
+        <div className="container">
+          <h2 className="display-2 mt-5 ml-3">{event.name}</h2>
+          {/* <h5 className="ml-3 mt-3">{event.location}</h5> */}
+          <div class="flex flex--row ml-3 mr-3 flex--alignCenter organizer-row">
             <MdLocationOn />
             <span> {event.location}</span>
           </div>
           <div class="flex flex--row ml-3 flex--alignCenter organizer-row">
             <IoMdPeople />
-            <span>    {attendes.length} Attending</span>
+            <span> {attendes.length} Attending</span>
           </div>
           <div class="flex flex--row ml-3 flex--alignCenter organizer-row">
             <MdPersonOutline />
@@ -274,10 +285,8 @@ class SingleEvent extends Component {
               </Link>{" "}
             </span>
           </div>
-          
-          
-          
-        <div className="ml-3 mt-3">
+
+          <div className="ml-3 mt-3">
             <TiTags />
             {tags.map((tag, i) => {
               return (
@@ -290,38 +299,40 @@ class SingleEvent extends Component {
               );
             })}
           </div>
-          <br/>
+          <br />
           <div class="float-right">
             {/* <TiGroup /> */}
             <span>
               {" "}
-              <Link to={`/group/${groupId}`} className="btn btn-raised btn-info btn-sm mr-3">
-              Back to group
-            </Link>{" "}
+              <Link
+                to={`/group/${groupId}`}
+                className="btn btn-raised btn-info btn-sm mr-3"
+              >
+                Back to group
+              </Link>{" "}
             </span>
           </div>
           {attend ? (
-          <div className="flex flex--row ml-3 flex--alignCenter organizer-row">
-            {/* <span> Attendes  {attendes.length}</span> */}
-            <button
-              className="btn btn-raised btn-danger btn-sm mr-3"
-              onClick={this.joinToggle}
-            >
-              Not Attend
-            </button>
-          </div>
-        ) : (
-          <div className="flex flex--row ml-3 flex--alignCenter organizer-row">
-            
-            <button
-              className="btn btn-raised btn-danger btn-sm mr-3"
-              onClick={this.joinToggle}
-            >
-              Attend 
-            </button>
-          </div>
-        )}
-        {/* <div className="ml-3 mt-3">
+            <div className="flex flex--row ml-3 flex--alignCenter organizer-row">
+              {/* <span> Attendes  {attendes.length}</span> */}
+              <button
+                className="btn btn-raised btn-danger btn-sm mr-3"
+                onClick={this.joinToggle}
+              >
+                Not Attend
+              </button>
+            </div>
+          ) : (
+            <div className="flex flex--row ml-3 flex--alignCenter organizer-row">
+              <button
+                className="btn btn-raised btn-danger btn-sm mr-3"
+                onClick={this.joinToggle}
+              >
+                Attend
+              </button>
+            </div>
+          )}
+          {/* <div className="ml-3 mt-3">
           {tags.map((tag, i) => {
             return (
               <span
@@ -334,14 +345,14 @@ class SingleEvent extends Component {
           })}
         </div> */}
 
-        {this.renderEvent(event)}
-        {/* {this.renderEvents(group_events)} */}
-        {/* <Comment
+          {this.renderEvent(event)}
+          {/* {this.renderEvents(group_events)} */}
+          {/* <Comment
           postId={post._id}
           comments={comments.reverse()}
           updateComments={this.updateComments}
         /> */}
-      </div>
+        </div>
       </div>
     );
   }
