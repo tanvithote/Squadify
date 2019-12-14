@@ -32,7 +32,6 @@ class Menu extends Component {
     }
   };
 
-
   render() {
     const userId = isAuthenticated().user ? isAuthenticated().user._id : "";
     const userName = isAuthenticated().user ? isAuthenticated().user.name : "";
@@ -67,7 +66,7 @@ class Menu extends Component {
 
           <NavDropdown
             className=""
-            title={<span className="text-info my-auto">{userName}</span>}
+            title={<span className="text-info my-auto">Hello, {userName}</span>}
             id="collasible-nav-dropdown"
           >
             <NavDropdown.Item>

@@ -173,9 +173,9 @@ class Profile extends Component {
           </div>
           <div className="col-md-8">
             <div className="lead mt-2">
-              <p>Hello {user.name}</p>
+              <p>Name: {user.name}</p>
               <p>Email: {user.email}</p>
-              <p>{`Joined on ${new Date(user.created).toDateString()}`}</p>
+              <p>{`Joined on: ${new Date(user.created).toDateString()}`}</p>
             </div>
             {isAuthenticated().user && isAuthenticated().user._id === user._id && (
               <div className="d-inline-block">
