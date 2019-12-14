@@ -6,7 +6,7 @@ import image from '../images/home2 (1).png';
 import image2 from '../images/home.png';
 import { listEventByUser } from "../event/apiEvent";
 import { isAuthenticated } from "../auth";
-import { groupsByUserJoined } from "../group/apiGroup";
+import { groupsByUserTags } from "../group/apiGroup";
 
 class Home extends Component {
   state = {
@@ -30,8 +30,9 @@ class Home extends Component {
       } else {
         this.setState({ user: data });
         //this.loadPosts(data._id); // pass userId to loadPosts by this user
-        this.loadGroups(data._id);
+        
         this.loadEvents(data._id);
+        this.loadGroups(data._id);
       }
     });
   };
@@ -50,7 +51,7 @@ class Home extends Component {
 
   loadGroups = userId => {
     const token = isAuthenticated().token;
-    groupsByUserJoined(userId, token).then(data => {
+    groupsByUserTags(userId, token).then(data => {
       if (data.error) {
         console.log(data.error);
       } else {
@@ -74,7 +75,7 @@ class Home extends Component {
         </div>
       );
     } else {
-      console.log(group_events);
+      //console.log(group_events);
       //const groupId = this.state.group._id;
       //const { joined, members } = this.state;
       return (
@@ -123,6 +124,8 @@ class Home extends Component {
       );
     }
   };
+
+  
   render(){
     const {
       redirectToSignin,

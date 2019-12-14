@@ -27,7 +27,32 @@ exports.getGroups = (req, res) => {
       res.json(groups);
     })
     .catch(err => console.log(err));
-};
+
+  };
+
+  function putGroup(tag){
+    group = Group.find({ tags: tag.toLowerCase() }).populate("createdBy", "_id name").exec(function(err, grps){
+      for( var i =0; i< grps.length; i++)
+        groupList.push(grps[i]);
+    });
+  }
+  
+  global.groupList = [];
+  
+  exports.getGroupsbyTags = (req, res) => {
+    const tagList = [];
+    //const id = req.query.id;
+    console.log("UserID ",req.profile._id );
+    user  = User.find({_id: req.profile._id }).
+            select('tags').exec(function (err, tags) {
+              if (err) return handleError(err);
+              for(var i = 0; i < tags[0].tags.length; i++){
+                putGroup(tags[0].tags[i]);
+              }
+            });
+            console.log(groupList);
+            res.json(groupList).then(groupList.length = 0);
+  };
 
 exports.createGroup = (req, res, next) => {
   let form = new formidable.IncomingForm();
