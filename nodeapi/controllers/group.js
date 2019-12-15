@@ -36,6 +36,11 @@ exports.getGroups = (req, res) => {
         groupList.push(grps[i]);
     });
   }
+
+  function removeitm(i){
+    console.log("removing item ",i," ", groupList.length)
+    groupList = groupList.slice(0, i).concat(groupList.slice(i + 1, groupList.length))
+  }
   
   global.groupList = [];
   
@@ -50,8 +55,21 @@ exports.getGroups = (req, res) => {
                 putGroup(tags[0].tags[i]);
               }
             });
-            console.log(groupList);
-            res.json(groupList).then(groupList.length = 0);
+    console.log(groupList);
+    user2 = User.find({_id: req.profile._id }).select('groups')
+               .exec(function(err, grps){
+                var n = groupList.length;
+                for(var i = 0; i < n; i++)
+                {
+                  if (grps.indexOf(groupList[i]._id) != -1){
+                    removeitm(i)
+                    n = n-1;
+                    //var itm = groupList[i];
+                    //groupList = groupList.filter(item => item !== itm)
+                  }
+                }
+               });
+    res.json(groupList).then(groupList.length = 0);
   };
 
 exports.createGroup = (req, res, next) => {
