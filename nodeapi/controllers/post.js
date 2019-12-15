@@ -3,6 +3,7 @@ const Group = require("../models/group");
 const formidable = require("formidable");
 const fs = require("fs");
 const _ = require("lodash");
+const User = require("../models/user");
 
 exports.postById = (req, res, next, id) => {
   Post.findById(id)
@@ -137,6 +138,38 @@ exports.postsByUser = (req, res) => {
       }
       res.json(posts);
     });
+};
+
+global.postList = [];
+
+function putPosts(group){
+  //console.log("select group: ",group);
+  posts = Post.find({ group: group}).populate("postedBy", "_id name",).populate("group", "_id name").select("_id title body created likes")
+  .sort("_created").exec(function(err, psts){
+    //console.log("Getting Posts",psts)
+    for( var i =0; i< psts.length; i++)
+      postList.push(psts[i]);
+      //console.log("Posting", postList)
+  });
+}
+
+exports.postsByUserGroup = (req, res) => {
+  User.find({ _id: req.profile._id })
+    .select('groups')
+    .exec((err, groups) => {
+      if (err) {
+        return res.status(400).json({
+          error: err
+        });
+      }
+      for(var i = 0; i < groups[0].groups.length; i++){
+        //console.log(i, groups[0].groups.length);
+        putPosts(groups[0].groups[i]);
+      }
+      //console.log("Groups of user",groups)
+    });
+    //console.log("Posts of group:", postList)
+    res.json(postList).then(postList.length = 0);;
 };
 
 exports.isPoster = (req, res, next) => {
