@@ -50,11 +50,14 @@ class SingleEvent extends Component {
 
     let callApi = this.state.attend ? notAttendEvent : attendEvent; // call unlike/like method accordingly
     callApi(userId, token, eventId).then(data => {
-      console.log(token);
+      // console.log(token);
       if (data.error) {
         console.log("error in api :", data.error);
       } else {
-        console.log(data);
+        // console.log(data);
+        if (data.event === null) {
+          window.location.reload();
+        }
         this.setState({
           attend: !this.state.attend,
           attendes: data.event.attendes,
@@ -325,7 +328,7 @@ class SingleEvent extends Component {
           ) : (
             <div className="flex flex--row ml-3 flex--alignCenter organizer-row">
               <button
-                className="btn btn-raised btn-danger btn-sm mr-3"
+                className="btn btn-raised btn-success btn-sm mr-3"
                 onClick={this.joinToggle}
               >
                 Attend
