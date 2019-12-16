@@ -241,6 +241,21 @@ exports.singleGroup = (req, res) => {
 // };
 
 exports.joinGroup = (req, res) => {
+  User.findByIdAndUpdate(
+    req.body.userId,
+    { $push: { groups: req.body.groupId} },
+    { new: true } // required by Mongoose
+  ).exec((err, result) => {
+    if (err) {
+      return res.status(400).json({
+        error: err
+      });
+    }
+    // } else {
+    //   res.json(result);
+    // }
+  });
+
   Group.findByIdAndUpdate(
     req.body.groupId,
     { $push: { members: req.body.userId } },
@@ -254,9 +269,23 @@ exports.joinGroup = (req, res) => {
       res.json(result);
     }
   });
+
+  
 };
 
 exports.unjoinGroup = (req, res) => {
+  User.findByIdAndUpdate(
+    req.body.userId,
+    { $pull: { groups: req.body.groupId } },
+    { new: true } // required by Mongoose
+  ).exec((err, result) => {
+    if (err) {
+      return res.status(400).json({
+        error: err
+      });
+    }
+  });
+
   Group.findByIdAndUpdate(
     req.body.groupId,
     { $pull: { members: req.body.userId } },
@@ -270,6 +299,9 @@ exports.unjoinGroup = (req, res) => {
       res.json(result);
     }
   });
+
+
+
 };
 
 // exports.groupsByTag = (req, res, next, tag) => {
