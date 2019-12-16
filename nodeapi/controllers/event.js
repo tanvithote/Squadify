@@ -133,13 +133,14 @@ exports.eventsByGroup = (req, res) => {
 exports.eventsByUser = (req, res) => {
   Event.find({ attendes: req.profile._id })
     // .populate("group", "_id name")
-    // .sort("_created")
+    .sort("eventdate")
     .exec((err, events) => {
       if (err) {
         return res.status(400).json({
           error: err
         });
       }
+      console.log(events);
       res.json(events);
     });
 };

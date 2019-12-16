@@ -5,6 +5,7 @@ const {
   postsByGroup,
   createPost,
   postsByUser,
+  postsByUserGroup,
   postById,
   isPoster,
   deletePost,
@@ -43,6 +44,7 @@ router.post(
   createPostValidators
 );
 router.get("/posts/by/:userId", requireSignin, postsByUser); // get posts of this user in all groups?
+router.get("/posts/by/group/:userId", requireSignin, postsByUserGroup);
 router.get("/post/:postId", singlePost);
 router.put("/post/:postId", requireSignin, isPoster, updatePost);
 router.delete("/post/:postId", requireSignin, isPoster, deletePost);

@@ -56,7 +56,7 @@ class Menu extends Component {
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="mr-auto">
             <Nav.Link href="/group/create">Start a new group</Nav.Link>
-            <Nav.Link href="/groups">Explore</Nav.Link>
+            <Nav.Link href="/groups">Explore Groups</Nav.Link>
             <Form className="ml-3" inline>
               {/* <FormControl type="text" placeholder="Search" className="justify-content-left" /> */}
               {/* <Button variant="outline-info">Search

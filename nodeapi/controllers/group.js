@@ -4,8 +4,6 @@ const fs = require("fs");
 const _ = require("lodash");
 const User = require("../models/user");
 
-
-
 exports.groupById = (req, res, next, id) => {
   Group.findById(id)
     .populate("createdBy", "_id name")
@@ -31,28 +29,50 @@ exports.getGroups = (req, res) => {
     .catch(err => console.log(err));
 };
 
-function putGroup(tag){
-  group = Group.find({ tags: tag.toLowerCase() }).populate("createdBy", "_id name").exec(function(err, grps){
-    for( var i =0; i< grps.length; i++)
-      groupList.push(grps[i]);
-  });
+function putGroup(tag) {
+  group = Group.find({ tags: tag.toLowerCase() })
+    .populate("createdBy", "_id name")
+    .exec(function(err, grps) {
+      for (var i = 0; i < grps.length; i++) groupList.push(grps[i]);
+    });
+}
+
+function removeitm(i) {
+  console.log("removing item ", i, " ", groupList.length);
+  groupList = groupList
+    .slice(0, i)
+    .concat(groupList.slice(i + 1, groupList.length));
 }
 
 global.groupList = [];
 
 exports.getGroupsbyTags = (req, res) => {
   const tagList = [];
-  const id = req.query.id;
-  console.log(id);
-  user  = User.find({_id: id }).
-          select('tags').exec(function (err, tags) {
-            if (err) return handleError(err);
-            for(var i = 0; i < tags[0].tags.length; i++){
-              putGroup(tags[0].tags[i]);
-            }
-          });
-          console.log(groupList);
-          res.json(groupList).then(groupList.length = 0);
+  //const id = req.query.id;
+  console.log("UserID ", req.profile._id);
+  user = User.find({ _id: req.profile._id })
+    .select("tags")
+    .exec(function(err, tags) {
+      if (err) return handleError(err);
+      for (var i = 0; i < tags[0].tags.length; i++) {
+        putGroup(tags[0].tags[i]);
+      }
+    });
+  console.log(groupList);
+  user2 = User.find({ _id: req.profile._id })
+    .select("groups")
+    .exec(function(err, grps) {
+      var n = groupList.length;
+      for (var i = 0; i < n; i++) {
+        if (grps.indexOf(groupList[i]._id) != -1) {
+          removeitm(i);
+          n = n - 1;
+          //var itm = groupList[i];
+          //groupList = groupList.filter(item => item !== itm)
+        }
+      }
+    });
+  res.json(groupList).then((groupList.length = 0));
 };
 
 exports.createGroup = (req, res, next) => {
@@ -116,17 +136,17 @@ exports.groupsByUser = (req, res) => {
 
 // Groups joined by user
 exports.groupsOfUser = (req, res) => {
-    Group.find({ members: req.profile._id })
-      .select("_id name")
-      .sort("_created")
-      .exec((err, events) => {
-        if (err) {
-          return res.status(400).json({
-            error: err
-          });
-        }
-        res.json(events);
-      });
+  Group.find({ members: req.profile._id })
+    .select("_id name")
+    .sort("_created")
+    .exec((err, events) => {
+      if (err) {
+        return res.status(400).json({
+          error: err
+        });
+      }
+      res.json(events);
+    });
 };
 
 exports.isCreator = (req, res, next) => {
