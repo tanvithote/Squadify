@@ -25,7 +25,7 @@ const { requireSignin } = require("../controllers/auth");
 const router = express.Router();
 
 router.get("/groups", getGroups);
-router.get("/groupsbyTags", getGroupsbyTags);
+// router.get("/groupsbyTags", getGroupsbyTags);
 router.post("/group/new/:userId", requireSignin, createGroup);
 router.get("/groups/by/:userId", requireSignin, groupsByUser);
 router.get("/groups/tag/of/:userId", getGroupsbyTags);
