@@ -22,10 +22,15 @@ class Home extends Component {
     posts: [],
     user: "",
     redirectToSignin: false,
-    error: ""
+    error: "",
+    reloadPage: false
   };
 
   componentDidMount() {
+    const { reloadPage } = this.state;
+    if (reloadPage) {
+      window.location.reload();
+    }
     const userId = isAuthenticated().user._id;
     this.init(userId);
   }

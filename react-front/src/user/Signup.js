@@ -50,7 +50,7 @@ class Signup extends Component {
   };
 
   componentDidMount() {
-    fetch('http://localhost:8080/getTags')
+    fetch(`${process.env.REACT_APP_API_URL}/getTags`)
       .then(res =>  res.json())
       .then((jsonData) =>{
         console.log(jsonData);

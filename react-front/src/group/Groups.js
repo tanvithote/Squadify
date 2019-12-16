@@ -40,7 +40,7 @@ class Groups extends Component {
       <div className="row">
         {groups.map((group, i) => {
           const creatorId = group.createdBy
-            ? `/user/{group.createdBy._id}`
+            ? group.createdBy._id
             : "";
           const creatorName = group.createdBy
             ? group.createdBy.name
@@ -63,7 +63,7 @@ class Groups extends Component {
                     <h6 class="card-subtitle">{group.name}</h6>
                     <h4 class="card-title">{group.about.substring(0, 100)}</h4>
                     <p class="card-text">
-                      Created by <Link to={`${creatorId}`}>{creatorName} </Link>
+                      Created by <Link to={`/user/${creatorId}`}>{creatorName} </Link>
                       on {new Date(group.created).toDateString()}
                     </p>
                   </div>
